@@ -2,7 +2,48 @@ import { useState } from "react";
 
 import membershipData from "../Data/Membership.json";
 
-import { FaEye, FaTrash, FaSearch } from "react-icons/fa";
+import { FaEye, FaTrash, FaSearch, FaUsers } from "react-icons/fa";
+
+// ================= SHADCN =================
+
+import { Button } from "@/components/ui/button";
+
+import { Badge } from "@/components/ui/badge";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+
+import { Input } from "@/components/ui/input";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from "@/components/ui/table";
+
+// =================================
 
 export default function Membership() {
   const [data, setData] = useState(membershipData);
@@ -11,16 +52,18 @@ export default function Membership() {
 
   const [detail, setDetail] = useState(null);
 
-  // HAPUS DATA
-  const hapusData = (id) => {
-    if (window.confirm("Hapus data membership?")) {
-      const result = data.filter((item) => item.id_customer !== id);
+  const [deleteData, setDeleteData] = useState(null);
 
-      setData(result);
-    }
+  // DELETE DATA
+
+  const hapusData = () => {
+    setData(data.filter((item) => item.id_customer !== deleteData.id_customer));
+
+    setDeleteData(null);
   };
 
   // SEARCH DATA
+
   const filterData = data.filter(
     (item) =>
       item.id_customer?.toLowerCase().includes(search.toLowerCase()) ||
@@ -29,188 +72,213 @@ export default function Membership() {
   );
 
   return (
-    <div className="min-h-screen bg-[#EAF2FF] p-6">
-      {/* HEADER */}
+    <div className="min-h-screen bg-[#EAF2FF] p-6 space-y-6">
+      {/* ALERT INFO */}
 
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">
-            Membership Customer
-          </h1>
+      <Alert className="bg-white">
+        <FaUsers />
 
-          <p className="text-gray-400">Data status pelanggan CRM</p>
-        </div>
+        <AlertTitle>Membership Customer</AlertTitle>
 
-        {/* SEARCH */}
+        <AlertDescription>
+          Total data membership : <b>{data.length}</b> customer
+        </AlertDescription>
+      </Alert>
 
-        <div
-          className="
-                    bg-white
-                    px-4
-                    py-3
-                    rounded-xl
-                    flex
-                    items-center
-                    gap-3
-                    shadow-sm
-                    "
-        >
-          <FaSearch className="text-gray-400" />
+      {/* SEARCH */}
 
-          <input
-            type="text"
-            placeholder="Cari membership..."
-            className="outline-none"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Data Membership CRM</CardTitle>
+        </CardHeader>
+
+        <CardContent>
+          <div className="relative max-w-md">
+            <FaSearch
+              className="
+              absolute
+              left-3
+              top-3
+              text-gray-400
+              "
+            />
+
+            <Input
+              placeholder="Cari membership..."
+              className="pl-10"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </CardContent>
+      </Card>
 
       {/* TABLE */}
 
-      <div
-        className="
-                bg-white
-                rounded-2xl
-                overflow-hidden
-                shadow-sm
-                "
-      >
-        <table className="w-full text-center">
-          <thead
-            className="
-                        bg-[#1018A8]
+      <Card>
+        <CardContent className="p-5">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>ID</TableHead>
+
+                <TableHead>Tanggal</TableHead>
+
+                <TableHead>Status</TableHead>
+
+                <TableHead>Level</TableHead>
+
+                <TableHead>Referral</TableHead>
+
+                <TableHead>Aktif</TableHead>
+
+                <TableHead className="text-center">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+
+            <TableBody>
+              {filterData.map((item) => (
+                <TableRow key={item.id_customer}>
+                  <TableCell>{item.id_customer}</TableCell>
+
+                  <TableCell>{item.tanggal_daftar}</TableCell>
+
+                  {/* BADGE STATUS */}
+
+                  <TableCell>
+                    <Badge
+                      className={
+                        item.status_member === "Member"
+                          ? `
+                        bg-green-100
+                        text-green-700
+                        hover:bg-green-100
+                        rounded-full
+                        px-4
+                        `
+                          : `
+                        bg-red-100
+                        text-red-700
+                        hover:bg-red-100
+                        rounded-full
+                        px-4
+                        `
+                      }
+                    >
+                      {item.status_member}
+                    </Badge>
+                  </TableCell>
+
+                  {/* BADGE LEVEL */}
+
+                  <TableCell>
+                    <Badge
+                      variant="outline"
+                      className={
+                        item.level_membership === "Gold"
+                          ? `
+                        border-yellow-400
+                        bg-yellow-50
+                        text-yellow-600
+                        rounded-full
+                        px-4
+                        `
+                          : item.level_membership === "Silver"
+                            ? `
+                        border-gray-400
+                        bg-gray-50
+                        text-gray-600
+                        rounded-full
+                        px-4
+                        `
+                            : `
+                        border-orange-400
+                        bg-orange-50
+                        text-orange-600
+                        rounded-full
+                        px-4
+                        `
+                      }
+                    >
+                      {item.level_membership}
+                    </Badge>
+                  </TableCell>
+
+                  <TableCell>{item.referral_code}</TableCell>
+
+                  {/* BADGE AKTIF */}
+
+                  <TableCell>
+                    <Badge
+                      className={
+                        item.status_aktif === "Aktif"
+                          ? `
+                        bg-blue-100
+                        text-blue-700
+                        hover:bg-blue-100
+                        rounded-full
+                        px-4
+                        `
+                          : `
+                        bg-gray-100
+                        text-gray-600
+                        hover:bg-gray-100
+                        rounded-full
+                        px-4
+                        `
+                      }
+                    >
+                      {item.status_aktif}
+                    </Badge>
+                  </TableCell>
+
+                  {/* ACTION */}
+
+                  <TableCell>
+                    <div className="flex justify-center gap-3">
+                      <Button
+                        onClick={() => setDetail(item)}
+                        className="
+                        bg-blue-600
+                        hover:bg-blue-700
                         text-white
                         "
-          >
-            <tr>
-              <th className="p-4">ID Customer</th>
+                      >
+                        <FaEye />
+                        Detail
+                      </Button>
 
-              <th>Tanggal Daftar</th>
-
-              <th>Status Member</th>
-
-              <th>Level Membership</th>
-
-              <th>Referral Code</th>
-
-              <th>Status Aktif</th>
-
-              <th>Aksi</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {filterData.map((item) => (
-              <tr
-                key={item.id_customer}
-                className="
-                                    border-b
-                                    hover:bg-blue-50
-                                    transition
-                                    "
-              >
-                <td className="p-4 font-semibold">{item.id_customer}</td>
-
-                <td>{item.tanggal_daftar}</td>
-
-                {/* STATUS MEMBER */}
-
-                <td>
-                  <span
-                    className={
-                      item.status_member === "Member"
-                        ? "bg-green-100 text-green-600 px-3 py-1 rounded-full"
-                        : "bg-red-100 text-red-600 px-3 py-1 rounded-full"
-                    }
-                  >
-                    {item.status_member}
-                  </span>
-                </td>
-
-                <td>{item.level_membership}</td>
-
-                <td>{item.referral_code}</td>
-
-                <td>
-                  <span
-                    className={
-                      item.status_aktif === "Aktif"
-                        ? "bg-blue-100 text-blue-600 px-3 py-1 rounded-full"
-                        : "bg-gray-100 text-gray-500 px-3 py-1 rounded-full"
-                    }
-                  >
-                    {item.status_aktif}
-                  </span>
-                </td>
-
-                {/* ACTION */}
-
-                <td>
-                  <div className="flex justify-center gap-3">
-                    <button
-                      onClick={() => setDetail(item)}
-                      className="
-                                                bg-blue-100
-                                                text-blue-600
-                                                p-3
-                                                rounded-lg
-                                                hover:bg-blue-600
-                                                hover:text-white
-                                                "
-                    >
-                      <FaEye />
-                    </button>
-
-                    <button
-                      onClick={() => hapusData(item.id_customer)}
-                      className="
-                                                bg-red-100
-                                                text-red-600
-                                                p-3
-                                                rounded-lg
-                                                hover:bg-red-600
-                                                hover:text-white
-                                                "
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* MODAL DETAIL */}
-
-      {detail && (
-        <div
-          className="
-                        fixed
-                        inset-0
-                        bg-black/40
-                        flex
-                        justify-center
-                        items-center
+                      <Button
+                        onClick={() => setDeleteData(item)}
+                        className="
+                        bg-red-600
+                        hover:bg-red-700
+                        text-white
                         "
-        >
-          <div
-            className="
-                            bg-white
-                            w-[430px]
-                            rounded-2xl
-                            p-6
-                            "
-          >
-            <h2 className="font-bold text-xl mb-5">Detail Membership</h2>
+                      >
+                        <FaTrash />
+                        Hapus
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
+      {/* DETAIL DIALOG */}
+
+      <Dialog open={!!detail} onOpenChange={() => setDetail(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Detail Membership</DialogTitle>
+          </DialogHeader>
+
+          {detail && (
             <div className="space-y-3">
               <p>ID : {detail.id_customer}</p>
-
-              <p>Tanggal : {detail.tanggal_daftar}</p>
 
               <p>Status : {detail.status_member}</p>
 
@@ -218,25 +286,40 @@ export default function Membership() {
 
               <p>Referral : {detail.referral_code}</p>
 
-              <p>Status Aktif : {detail.status_aktif}</p>
+              <p>Aktif : {detail.status_aktif}</p>
             </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
-            <button
-              onClick={() => setDetail(null)}
+      {/* ALERT DELETE */}
+
+      <AlertDialog open={!!deleteData} onOpenChange={() => setDeleteData(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Hapus Data Membership?</AlertDialogTitle>
+
+            <AlertDialogDescription>
+              Data customer <b>{deleteData?.id_customer}</b> akan dihapus
+              permanen.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+
+            <AlertDialogAction
+              onClick={hapusData}
               className="
-                                mt-6
-                                bg-[#1018A8]
-                                text-white
-                                w-full
-                                py-3
-                                rounded-xl
-                                "
+              bg-red-600
+              hover:bg-red-700
+              "
             >
-              Tutup
-            </button>
-          </div>
-        </div>
-      )}
+              Hapus
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

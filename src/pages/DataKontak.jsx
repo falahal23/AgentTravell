@@ -2,522 +2,189 @@ import { useState } from "react";
 
 import dataKontak from "../Data/DataKontak.json";
 
-import {
-    FaEye,
-    FaTrash,
-    FaSearch
-} from "react-icons/fa";
+import { FaEye, FaTrash, FaSearch, FaUsers } from "react-icons/fa";
 
+// SHADCN
+
+import { Button } from "@/components/ui/button";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+import { Input } from "@/components/ui/input";
+
+import { Textarea } from "@/components/ui/textarea";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+// ===============================
 
 export default function DataKontak() {
+  const [kontak, setKontak] = useState(dataKontak);
 
+  const [search, setSearch] = useState("");
 
-    const [kontak, setKontak] = useState(dataKontak);
+  const [detail, setDetail] = useState(null);
 
-    const [search, setSearch] = useState("");
+  const handleDelete = (id) => {
+    if (window.confirm("Yakin ingin hapus data?")) {
+      setKontak(kontak.filter((item) => item.id_customer !== id));
+    }
+  };
 
-    const [detail, setDetail] = useState(null);
+  const filteredData = kontak.filter(
+    (item) =>
+      item.id_customer?.toLowerCase().includes(search.toLowerCase()) ||
+      item.email?.toLowerCase().includes(search.toLowerCase()) ||
+      item.kota?.toLowerCase().includes(search.toLowerCase()),
+  );
 
+  return (
+    <div className="p-6 bg-[#EAF2FF] min-h-screen space-y-6">
+      {/* ALERT */}
 
+      <Alert className="bg-white">
+        <FaUsers />
 
-    // DELETE DATA
-    const handleDelete = (id) => {
+        <AlertTitle>Data Kontak Customer</AlertTitle>
 
-        const confirmDelete = confirm(
-            "Yakin ingin menghapus data ini?"
-        );
+        <AlertDescription>Total Customer : {kontak.length}</AlertDescription>
+      </Alert>
 
+      {/* HEADER SEARCH */}
 
-        if(confirmDelete){
+      <Card>
+        <CardHeader>
+          <CardTitle>Management Kontak</CardTitle>
+        </CardHeader>
 
-            const result = kontak.filter(
-                item => item.id_customer !== id
-            );
+        <CardContent>
+          <div className="relative">
+            <FaSearch
+              className="
+              absolute
+              left-3
+              top-3
+              text-gray-400
+              "
+            />
 
+            <Input
+              placeholder="Cari kontak..."
+              className="pl-10"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </CardContent>
+      </Card>
 
-            setKontak(result);
+      {/* TABLE */}
 
-        }
+      <Card>
+        <CardContent className="p-5">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>ID</TableHead>
 
-    };
+                <TableHead>HP</TableHead>
 
+                <TableHead>Email</TableHead>
 
+                <TableHead>Kota</TableHead>
 
-    // SEARCH FILTER
-    const filteredData = kontak.filter((item)=>
+                <TableHead>Provinsi</TableHead>
 
-        item.id_customer
-        .toLowerCase()
-        .includes(search.toLowerCase())
+                <TableHead>Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
 
-        ||
+            <TableBody>
+              {filteredData.map((item) => (
+                <TableRow key={item.id_customer}>
+                  <TableCell>{item.id_customer}</TableCell>
 
-        item.email
-        .toLowerCase()
-        .includes(search.toLowerCase())
+                  <TableCell>{item.nomor_hp}</TableCell>
 
-        ||
+                  <TableCell>{item.email}</TableCell>
 
-        item.kota
-        .toLowerCase()
-        .includes(search.toLowerCase())
+                  <TableCell>{item.kota}</TableCell>
 
-    );
+                  <TableCell>{item.provinsi}</TableCell>
 
+                  {/* BUTTON FIX */}
 
-
-
-
-    return (
-
-
-        <div className="p-6 bg-[#EAF2FF] min-h-screen">
-
-
-            {/* HEADER */}
-
-
-            <div className="flex justify-between items-center mb-6">
-
-
-                <div>
-
-
-                    <h1 className="text-2xl font-bold text-gray-800">
-
-                        Data Kontak Customer
-
-                    </h1>
-
-
-                    <p className="text-gray-400">
-
-                        Management data kontak pelanggan
-
-                    </p>
-
-
-                </div>
-
-
-
-                {/* SEARCH */}
-
-
-                <div
-                    className="
-                    bg-white
-                    px-4
-                    py-3
-                    rounded-xl
-                    flex
-                    items-center
-                    gap-3
-                    shadow-sm
-                    "
-                >
-
-
-                    <FaSearch 
-                        className="text-gray-400"
-                    />
-
-
-                    <input
-
-                        type="text"
-
-                        placeholder="Cari kontak..."
-
+                  <TableCell>
+                    <div className="flex gap-3">
+                      <Button
+                        onClick={() => setDetail(item)}
                         className="
-                        outline-none
-                        "
-
-                        value={search}
-
-                        onChange={(e)=>
-                            setSearch(e.target.value)
-                        }
-
-                    />
-
-
-                </div>
-
-
-
-            </div>
-
-
-
-
-
-
-
-
-            {/* TABLE */}
-
-
-            <div
-                className="
-                bg-white
-                rounded-2xl
-                shadow-sm
-                overflow-hidden
-                "
-            >
-
-
-
-                <table className="w-full">
-
-
-                    <thead
-                        className="
-                        bg-[#1018A8]
+                        bg-blue-600
                         text-white
                         "
-                    >
-
-
-                        <tr>
-
-                            <th className="p-4">
-                                ID Customer
-                            </th>
-
-
-                            <th>
-                                Nomor HP
-                            </th>
-
-
-                            <th>
-                                Email
-                            </th>
-
-
-                            <th>
-                                Kota
-                            </th>
-
-
-                            <th>
-                                Provinsi
-                            </th>
-
-
-                            <th>
-                                Aksi
-                            </th>
-
-
-                        </tr>
-
-
-                    </thead>
-
-
-
-
-
-
-                    <tbody>
-
-
-                        {
-
-                        filteredData.map((item)=>(
-
-
-                            <tr
-                                key={item.id_customer}
-
-                                className="
-                                text-center
-                                border-b
-                                hover:bg-blue-50
-                                transition
-                                "
-                            >
-
-
-
-                                <td className="p-4 font-semibold">
-
-                                    {item.id_customer}
-
-                                </td>
-
-
-
-                                <td>
-
-                                    {item.nomor_hp}
-
-                                </td>
-
-
-
-                                <td>
-
-                                    {item.email}
-
-                                </td>
-
-
-
-                                <td>
-
-                                    {item.kota}
-
-                                </td>
-
-
-
-                                <td>
-
-                                    {item.provinsi}
-
-                                </td>
-
-
-
-
-                                <td>
-
-
-                                    <div className="flex justify-center gap-3">
-
-
-
-                                        {/* DETAIL */}
-
-
-                                        <button
-
-                                            onClick={()=>
-                                                setDetail(item)
-                                            }
-
-
-                                            className="
-                                            bg-blue-100
-                                            text-blue-600
-                                            p-3
-                                            rounded-lg
-                                            hover:bg-blue-600
-                                            hover:text-white
-                                            "
-
-                                        >
-
-
-                                            <FaEye/>
-
-
-                                        </button>
-
-
-
-
-
-                                        {/* DELETE */}
-
-
-                                        <button
-
-                                            onClick={()=>
-                                                handleDelete(
-                                                    item.id_customer
-                                                )
-                                            }
-
-
-                                            className="
-                                            bg-red-100
-                                            text-red-600
-                                            p-3
-                                            rounded-lg
-                                            hover:bg-red-600
-                                            hover:text-white
-                                            "
-
-                                        >
-
-
-                                            <FaTrash/>
-
-
-                                        </button>
-
-
-
-                                    </div>
-
-
-                                </td>
-
-
-
-                            </tr>
-
-
-
-                        ))
-
-                        }
-
-
-
-                    </tbody>
-
-
-
-                </table>
-
-
-            </div>
-
-
-
-
-
-
-
-
-
-            {/* MODAL DETAIL */}
-
-
-            {
-
-            detail && (
-
-
-                <div
-                    className="
-                    fixed
-                    inset-0
-                    bg-black/40
-                    flex
-                    justify-center
-                    items-center
-                    "
-                >
-
-
-
-                    <div
+                      >
+                        <FaEye />
+                        Detail
+                      </Button>
+
+                      <Button
+                        onClick={() => handleDelete(item.id_customer)}
                         className="
-                        bg-white
-                        w-[450px]
-                        rounded-2xl
-                        p-6
+                        bg-red-600
+                        text-white
                         "
-                    >
-
-
-
-                        <h2
-                            className="
-                            text-xl
-                            font-bold
-                            mb-5
-                            "
-                        >
-
-                            Detail Customer
-
-
-                        </h2>
-
-
-
-
-
-                        <div className="space-y-3">
-
-
-                            <p>
-                                ID : {detail.id_customer}
-                            </p>
-
-
-                            <p>
-                                HP : {detail.nomor_hp}
-                            </p>
-
-
-                            <p>
-                                Email : {detail.email}
-                            </p>
-
-
-                            <p>
-                                Alamat : {detail.alamat}
-                            </p>
-
-
-                            <p>
-                                Kota : {detail.kota}
-                            </p>
-
-
-                            <p>
-                                Provinsi : {detail.provinsi}
-                            </p>
-
-
-
-                        </div>
-
-
-
-
-
-                        <button
-
-                            onClick={()=>
-                                setDetail(null)
-                            }
-
-
-                            className="
-                            mt-6
-                            bg-[#1018A8]
-                            text-white
-                            w-full
-                            py-3
-                            rounded-xl
-                            "
-
-                        >
-
-                            Tutup
-
-                        </button>
-
-
-
-
+                      >
+                        <FaTrash />
+                        Hapus
+                      </Button>
                     </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
+      {/* DETAIL */}
 
+      <Dialog open={!!detail} onOpenChange={() => setDetail(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Detail Customer</DialogTitle>
+          </DialogHeader>
 
-                </div>
+          {detail && (
+            <div className="space-y-4">
+              <Input value={detail.id_customer} readOnly />
 
+              <Input value={detail.email} readOnly />
 
-            )
+              <Textarea value={detail.alamat} readOnly />
 
-            }
-
-
-
-        </div>
-
-
-    );
-
-
+              <Button className="w-full" onClick={() => setDetail(null)}>
+                Tutup
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
 }
