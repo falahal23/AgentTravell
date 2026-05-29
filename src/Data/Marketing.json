@@ -1,0 +1,192 @@
+[
+  {
+    "id_customer": "CUST0001",
+    "sumber_user": "Marketplace",
+    "status_promo": "Promo Aktif"
+  },
+  {
+    "id_customer": "CUST0002",
+    "sumber_user": "YouTube",
+    "status_promo": "Promo Member"
+  },
+  {
+    "id_customer": "CUST0003",
+    "sumber_user": "Google Search",
+    "status_promo": "Promo Aktif"
+  },
+  {
+    "id_customer": "CUST0004",
+    "sumber_user": "YouTube",
+    "status_promo": "Promo Kedaluwarsa"
+  },
+  {
+    "id_customer": "CUST0005",
+    "sumber_user": "Website",
+    "status_promo": "Promo Kedaluwarsa"
+  },
+  {
+    "id_customer": "CUST0006",
+    "sumber_user": "TikTok",
+    "status_promo": "Promo Member"
+  },
+  {
+    "id_customer": "CUST0007",
+    "sumber_user": "Google Search",
+    "status_promo": "Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0008",
+    "sumber_user": "Facebook",
+    "status_promo": "Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0009",
+    "sumber_user": "Marketplace",
+    "status_promo": "Promo Member"
+  },
+  {
+    "id_customer": "CUST0010",
+    "sumber_user": "Referral Teman",
+    "status_promo": "Promo Member"
+  },
+  {
+    "id_customer": "CUST0011",
+    "sumber_user": "Instagram",
+    "status_promo": "Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0012",
+    "sumber_user": "TikTok",
+    "status_promo": "Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0013",
+    "sumber_user": "Google Ads",
+    "status_promo": "Promo Aktif"
+  },
+  {
+    "id_customer": "CUST0014",
+    "sumber_user": "Instagram",
+    "status_promo": "Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0015",
+    "sumber_user": "Google Search",
+    "status_promo": "Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0016",
+    "sumber_user": "Instagram",
+    "status_promo": "Promo Kedaluwarsa"
+  },
+  {
+    "id_customer": "CUST0017",
+    "sumber_user": "YouTube",
+    "status_promo": "Promo Kedaluwarsa"
+  },
+  {
+    "id_customer": "CUST0018",
+    "sumber_user": "YouTube",
+    "status_promo": "Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0019",
+    "sumber_user": "Referral Teman",
+    "status_promo": "Tidak Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0020",
+    "sumber_user": "Facebook",
+    "status_promo": "Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0021",
+    "sumber_user": "Referral Teman",
+    "status_promo": "Promo Kedaluwarsa"
+  },
+  {
+    "id_customer": "CUST0022",
+    "sumber_user": "Google Ads",
+    "status_promo": "Promo Kedaluwarsa"
+  },
+  {
+    "id_customer": "CUST0023",
+    "sumber_user": "WhatsApp",
+    "status_promo": "Tidak Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0024",
+    "sumber_user": "WhatsApp",
+    "status_promo": "Promo Member"
+  },
+  {
+    "id_customer": "CUST0025",
+    "sumber_user": "Instagram",
+    "status_promo": "Promo Aktif"
+  },
+  {
+    "id_customer": "CUST0026",
+    "sumber_user": "Instagram",
+    "status_promo": "Promo Kedaluwarsa"
+  },
+  {
+    "id_customer": "CUST0027",
+    "sumber_user": "Instagram",
+    "status_promo": "Promo Member"
+  },
+  {
+    "id_customer": "CUST0028",
+    "sumber_user": "Google Search",
+    "status_promo": "Promo Kedaluwarsa"
+  },
+  {
+    "id_customer": "CUST0029",
+    "sumber_user": "Instagram",
+    "status_promo": "Promo Kedaluwarsa"
+  },
+  {
+    "id_customer": "CUST0030",
+    "sumber_user": "Google Search",
+    "status_promo": "Promo Member"
+  },
+  {
+    "id_customer": "CUST0031",
+    "sumber_user": "TikTok",
+    "status_promo": "Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0032",
+    "sumber_user": "YouTube",
+    "status_promo": "Tidak Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0033",
+    "sumber_user": "YouTube",
+    "status_promo": "Promo Kedaluwarsa"
+  },
+  {
+    "id_customer": "CUST0034",
+    "sumber_user": "Instagram",
+    "status_promo": "Promo Member"
+  },
+  {
+    "id_customer": "CUST0035",
+    "sumber_user": "YouTube",
+    "status_promo": "Tidak Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0036",
+    "sumber_user": "YouTube",
+    "status_promo": "Promo Member"
+  },
+  {
+    "id_customer": "CUST0037",
+    "sumber_user": "Referral Teman",
+    "status_promo": "Promo Kedaluwarsa"
+  },
+  {
+    "id_customer": "CUST0038",
+    "sumber_user": "Google Search",
+    "status_promo": "Tidak Menggunakan Promo"
+  }
+]

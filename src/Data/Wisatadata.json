@@ -1,0 +1,46 @@
+[
+  {
+    "id": "PKG-2026-001",
+    "title": "Eksplorasi Raja Ampat",
+    "category": "Luxury Travel",
+    "destination": "Papua Barat, Indonesia",
+    "duration": "5 Days 4 Nights",
+    "price": 7500000,
+    "quota": 12,
+    "booked": 8,
+    "status": "Available"
+  },
+  {
+    "id": "PKG-2026-002",
+    "title": "City Tour Tokyo & Kyoto",
+    "category": "International",
+    "destination": "Jepang",
+    "duration": "7 Days 6 Nights",
+    "price": 15800000,
+    "quota": 20,
+    "booked": 20,
+    "status": "Full"
+  },
+  {
+    "id": "PKG-2026-003",
+    "title": "Sunrise Bromo Milky Way",
+    "category": "Adventure",
+    "destination": "Jawa Timur, Indonesia",
+    "duration": "2 Days 1 Night",
+    "price": 1250000,
+    "quota": 15,
+    "booked": 5,
+    "status": "Scheduled"
+  },
+  {
+    "id": "PKG-2026-004",
+    "title": "Bali Tropical Getaway",
+    "category": "Honeymoon",
+    "destination": "Uluwatu, Bali",
+    "duration": "4 Days 3 Nights",
+    "price": 4500000,
+    "quota": 10,
+    "booked": 2,
+    "status": "Available"
+  }
+]

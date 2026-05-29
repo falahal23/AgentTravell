@@ -1,0 +1,30 @@
+[
+  {
+    "id": "CAT-001",
+    "name": "Luxury Travel",
+    "description": "Fasilitas hotel bintang 5 dan layanan eksklusif.",
+    "totalPackages": 12,
+    "icon": "FaGem"
+  },
+  {
+    "id": "CAT-002",
+    "name": "Adventure",
+    "description": "Kegiatan outdoor ekstrem dan eksplorasi alam.",
+    "totalPackages": 8,
+    "icon": "FaMountain"
+  },
+  {
+    "id": "CAT-003",
+    "name": "Honeymoon",
+    "description": "Paket romantis untuk pasangan baru menikah.",
+    "totalPackages": 5,
+    "icon": "FaHeart"
+  },
+  {
+    "id": "CAT-004",
+    "name": "International",
+    "description": "Perjalanan ke luar negeri dengan rute populer.",
+    "totalPackages": 15,
+    "icon": "FaGlobe"
+  }
+]

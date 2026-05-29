@@ -1,0 +1,242 @@
+[
+  {
+    "id_customer": "CUST0001",
+    "id_transaksi": "TRX-312748",
+    "total_transaksi": 426387.6,
+    "metode_pembayaran": "Transfer Bank",
+    "produk_dibeli": "Paket Platinum",
+    "tanggal_transaksi": "2023-08-14"
+  },
+  {
+    "id_customer": "CUST0002",
+    "id_transaksi": "TRX-803899",
+    "total_transaksi": 4834691,
+    "metode_pembayaran": "COD",
+    "produk_dibeli": "Paket Basic",
+    "tanggal_transaksi": "2025-04-09"
+  },
+  {
+    "id_customer": "CUST0003",
+    "id_transaksi": "TRX-846491",
+    "total_transaksi": 4672670,
+    "metode_pembayaran": "Kartu Kredit",
+    "produk_dibeli": "Produk Skincare",
+    "tanggal_transaksi": "2023-11-09"
+  },
+  {
+    "id_customer": "CUST0004",
+    "id_transaksi": "TRX-141035",
+    "total_transaksi": 9210623,
+    "metode_pembayaran": "QRIS",
+    "produk_dibeli": "Paket Platinum",
+    "tanggal_transaksi": "2025-05-22"
+  },
+  {
+    "id_customer": "CUST0005",
+    "id_transaksi": "TRX-377252",
+    "total_transaksi": 6320081,
+    "metode_pembayaran": "Transfer Bank",
+    "produk_dibeli": "Paket Gold",
+    "tanggal_transaksi": "2025-09-26"
+  },
+  {
+    "id_customer": "CUST0006",
+    "id_transaksi": "TRX-883497",
+    "total_transaksi": 9959654,
+    "metode_pembayaran": "Kartu Kredit",
+    "produk_dibeli": "Paket Premium",
+    "tanggal_transaksi": "2024-05-23"
+  },
+  {
+    "id_customer": "CUST0007",
+    "id_transaksi": "TRX-221378",
+    "total_transaksi": 4012121,
+    "metode_pembayaran": "Transfer Bank",
+    "produk_dibeli": "Produk Skincare",
+    "tanggal_transaksi": "2024-06-23"
+  },
+  {
+    "id_customer": "CUST0008",
+    "id_transaksi": "TRX-126674",
+    "total_transaksi": 83771.99,
+    "metode_pembayaran": "Transfer Bank",
+    "produk_dibeli": "Booking Konsultasi",
+    "tanggal_transaksi": "2023-01-14"
+  },
+  {
+    "id_customer": "CUST0009",
+    "id_transaksi": "TRX-784750",
+    "total_transaksi": 654107.7,
+    "metode_pembayaran": "QRIS",
+    "produk_dibeli": "Paket Basic",
+    "tanggal_transaksi": "2023-12-29"
+  },
+  {
+    "id_customer": "CUST0010",
+    "id_transaksi": "TRX-957104",
+    "total_transaksi": 8157439,
+    "metode_pembayaran": "E-Wallet",
+    "produk_dibeli": "Booking Konsultasi",
+    "tanggal_transaksi": "2024-06-30"
+  },
+  {
+    "id_customer": "CUST0011",
+    "id_transaksi": "TRX-137081",
+    "total_transaksi": 7249192,
+    "metode_pembayaran": "Transfer Bank",
+    "produk_dibeli": "Paket Platinum",
+    "tanggal_transaksi": "2023-09-06"
+  },
+  {
+    "id_customer": "CUST0012",
+    "id_transaksi": "TRX-440191",
+    "total_transaksi": 5375559,
+    "metode_pembayaran": "Debit",
+    "produk_dibeli": "Paket Tahunan",
+    "tanggal_transaksi": "2025-03-17"
+  },
+  {
+    "id_customer": "CUST0013",
+    "id_transaksi": "TRX-326561",
+    "total_transaksi": 1576980,
+    "metode_pembayaran": "E-Wallet",
+    "produk_dibeli": "Paket Premium",
+    "tanggal_transaksi": "2024-10-22"
+  },
+  {
+    "id_customer": "CUST0014",
+    "id_transaksi": "TRX-246206",
+    "total_transaksi": 3635015,
+    "metode_pembayaran": "COD",
+    "produk_dibeli": "Produk Skincare",
+    "tanggal_transaksi": "2023-01-07"
+  },
+  {
+    "id_customer": "CUST0015",
+    "id_transaksi": "TRX-764769",
+    "total_transaksi": 9813081,
+    "metode_pembayaran": "QRIS",
+    "produk_dibeli": "Booking Konsultasi",
+    "tanggal_transaksi": "2024-03-03"
+  },
+  {
+    "id_customer": "CUST0016",
+    "id_transaksi": "TRX-448829",
+    "total_transaksi": 807070.5,
+    "metode_pembayaran": "Debit",
+    "produk_dibeli": "Paket Tahunan",
+    "tanggal_transaksi": "2023-04-10"
+  },
+  {
+    "id_customer": "CUST0017",
+    "id_transaksi": "TRX-826474",
+    "total_transaksi": 2183782,
+    "metode_pembayaran": "Debit",
+    "produk_dibeli": "Paket Tahunan",
+    "tanggal_transaksi": "2024-04-25"
+  },
+  {
+    "id_customer": "CUST0018",
+    "id_transaksi": "TRX-296280",
+    "total_transaksi": 9812266,
+    "metode_pembayaran": "E-Wallet",
+    "produk_dibeli": "Paket Gold",
+    "tanggal_transaksi": "2025-04-08"
+  },
+  {
+    "id_customer": "CUST0019",
+    "id_transaksi": "TRX-130946",
+    "total_transaksi": 2505897,
+    "metode_pembayaran": "Kartu Kredit",
+    "produk_dibeli": "Paket Basic",
+    "tanggal_transaksi": "2024-01-10"
+  },
+  {
+    "id_customer": "CUST0020",
+    "id_transaksi": "TRX-873332",
+    "total_transaksi": 8244082,
+    "metode_pembayaran": "E-Wallet",
+    "produk_dibeli": "Paket Premium",
+    "tanggal_transaksi": "2025-01-06"
+  },
+  {
+    "id_customer": "CUST0021",
+    "id_transaksi": "TRX-829411",
+    "total_transaksi": 1976468,
+    "metode_pembayaran": "QRIS",
+    "produk_dibeli": "Paket Gold",
+    "tanggal_transaksi": "2025-01-25"
+  },
+  {
+    "id_customer": "CUST0022",
+    "id_transaksi": "TRX-929873",
+    "total_transaksi": 9378894,
+    "metode_pembayaran": "COD",
+    "produk_dibeli": "Booking Konsultasi",
+    "tanggal_transaksi": "2024-07-23"
+  },
+  {
+    "id_customer": "CUST0023",
+    "id_transaksi": "TRX-956861",
+    "total_transaksi": 1206178,
+    "metode_pembayaran": "E-Wallet",
+    "produk_dibeli": "Paket Premium",
+    "tanggal_transaksi": "2023-07-01"
+  },
+  {
+    "id_customer": "CUST0024",
+    "id_transaksi": "TRX-434675",
+    "total_transaksi": 4285013,
+    "metode_pembayaran": "E-Wallet",
+    "produk_dibeli": "Paket Premium",
+    "tanggal_transaksi": "2023-02-21"
+  },
+  {
+    "id_customer": "CUST0025",
+    "id_transaksi": "TRX-436097",
+    "total_transaksi": 200311.7,
+    "metode_pembayaran": "Transfer Bank",
+    "produk_dibeli": "Booking Konsultasi",
+    "tanggal_transaksi": "2025-04-24"
+  },
+  {
+    "id_customer": "CUST0026",
+    "id_transaksi": "TRX-865407",
+    "total_transaksi": 798421.4,
+    "metode_pembayaran": "Debit",
+    "produk_dibeli": "Paket Platinum",
+    "tanggal_transaksi": "2023-05-04"
+  },
+  {
+    "id_customer": "CUST0027",
+    "id_transaksi": "TRX-190046",
+    "total_transaksi": 9339523,
+    "metode_pembayaran": "Debit",
+    "produk_dibeli": "Paket Gold",
+    "tanggal_transaksi": "2025-05-05"
+  },
+  {
+    "id_customer": "CUST0028",
+    "id_transaksi": "TRX-562657",
+    "total_transaksi": 4954516,
+    "metode_pembayaran": "COD",
+    "produk_dibeli": "Paket Premium",
+    "tanggal_transaksi": "2023-04-07"
+  },
+  {
+    "id_customer": "CUST0029",
+    "id_transaksi": "TRX-456717",
+    "total_transaksi": 8636831,
+    "metode_pembayaran": "E-Wallet",
+    "produk_dibeli": "Booking Konsultasi",
+    "tanggal_transaksi": "2024-06-30"
+  },
+  {
+    "id_customer": "CUST0030",
+    "id_transaksi": "TRX-907922",
+    "total_transaksi": 782684.4,
+    "metode_pembayaran": "QRIS",
+    "produk_dibeli": "Paket Basic",
+    "tanggal_transaksi": "2025-07-26"
+  }
+]

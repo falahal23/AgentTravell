@@ -1,0 +1,74 @@
+[
+  {
+    "id": "TRV-M001",
+    "route": "Pekanbaru - Padang",
+    "carType": "Toyota Hiace Premio",
+    "driver": "Budi Santoso",
+    "date": "2026-05-03",
+    "time": "08:00 WIB",
+    "price": 200000,
+    "seatsAvailable": 4,
+    "totalSeats": 14,
+    "status": "Scheduled"
+  },
+  {
+    "id": "TRV-M002",
+    "route": "Pekanbaru - Dumai",
+    "carType": "Toyota Innova Reborn",
+    "driver": "Andi Wijaya",
+    "date": "2026-05-02",
+    "time": "10:00 WIB",
+    "price": 150000,
+    "seatsAvailable": 0,
+    "totalSeats": 7,
+    "status": "Full"
+  },
+  {
+    "id": "TRV-M003",
+    "route": "Pekanbaru - Bukittinggi",
+    "carType": "Toyota Hiace Commuter",
+    "driver": "Syafiq Anwar",
+    "date": "2026-05-02",
+    "time": "14:00 WIB",
+    "price": 180000,
+    "seatsAvailable": 10,
+    "totalSeats": 15,
+    "status": "Scheduled"
+  },
+  {
+    "id": "TRV-M004",
+    "route": "Jakarta - Bandung",
+    "carType": "Isuzu Elf Long",
+    "driver": "Rahmat Hidayat",
+    "date": "2026-05-01",
+    "time": "07:30 WIB",
+    "price": 120000,
+    "seatsAvailable": 2,
+    "totalSeats": 19,
+    "status": "On Route"
+  },
+  {
+    "id": "TRV-M005",
+    "route": "Pekanbaru - Rengat",
+    "carType": "Toyota Innova Zenix",
+    "driver": "Dedi Kusuma",
+    "date": "2026-05-01",
+    "time": "16:00 WIB",
+    "price": 170000,
+    "seatsAvailable": 7,
+    "totalSeats": 7,
+    "status": "Completed"
+  },
+  {
+    "id": "TRV-M006",
+    "route": "Padang - Bukittinggi",
+    "carType": "Toyota Avanza",
+    "driver": "Hasan Basri",
+    "date": "2026-05-04",
+    "time": "09:00 WIB",
+    "price": 80000,
+    "seatsAvailable": 6,
+    "totalSeats": 6,
+    "status": "Scheduled"
+  }
+]

@@ -1,0 +1,82 @@
+[
+    {
+        "id_customer": "CUST0001",
+        "tanggal_daftar": "2025-07-28",
+        "status_member": "Member",
+        "level_membership": "Platinum",
+        "referral_code": "ZXYFUVLT",
+        "status_aktif": "Tidak Aktif"
+    },
+    {
+        "id_customer": "CUST0002",
+        "tanggal_daftar": "2023-02-08",
+        "status_member": "Non Member",
+        "level_membership": "Basic",
+        "referral_code": "4CTR05AD",
+        "status_aktif": "Aktif"
+    },
+    {
+        "id_customer": "CUST0003",
+        "tanggal_daftar": "2025-07-30",
+        "status_member": "Member",
+        "level_membership": "Gold",
+        "referral_code": "1EWGURBQ",
+        "status_aktif": "Tidak Aktif"
+    },
+    {
+        "id_customer": "CUST0004",
+        "tanggal_daftar": "2025-10-25",
+        "status_member": "Member",
+        "level_membership": "Basic",
+        "referral_code": "N3D0DYH2",
+        "status_aktif": "Aktif"
+    },
+    {
+        "id_customer": "CUST0005",
+        "tanggal_daftar": "2024-01-05",
+        "status_member": "Member",
+        "level_membership": "Basic",
+        "referral_code": "6QKZWU3M",
+        "status_aktif": "Tidak Aktif"
+    },
+    {
+        "id_customer": "CUST0006",
+        "tanggal_daftar": "2025-01-30",
+        "status_member": "Member",
+        "level_membership": "Silver",
+        "referral_code": "CVDACBF0",
+        "status_aktif": "Tidak Aktif"
+    },
+    {
+        "id_customer": "CUST0007",
+        "tanggal_daftar": "2022-01-29",
+        "status_member": "Member",
+        "level_membership": "Silver",
+        "referral_code": "U2ZI53NV",
+        "status_aktif": "Aktif"
+    },
+    {
+        "id_customer": "CUST0008",
+        "tanggal_daftar": "2025-11-12",
+        "status_member": "Member",
+        "level_membership": "Gold",
+        "referral_code": "CEV9EGWF",
+        "status_aktif": "Tidak Aktif"
+    },
+    {
+        "id_customer": "CUST0009",
+        "tanggal_daftar": "2025-07-18",
+        "status_member": "Member",
+        "level_membership": "Platinum",
+        "referral_code": "ROXDCCW3",
+        "status_aktif": "Tidak Aktif"
+    },
+    {
+        "id_customer": "CUST0010",
+        "tanggal_daftar": "2025-12-22",
+        "status_member": "Non Member",
+        "level_membership": "Silver",
+        "referral_code": "3PTRES3U",
+        "status_aktif": "Aktif"
+    }
+]

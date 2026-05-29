@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "title": "Paket Wisata Bali 3 Hari",
+    "code": "TRV001",
+    "category": "Tour Package",
+    "brand": "TravelGo",
+    "price": 3500000,
+    "stock": 15,
+    "gambar": "https://images.unsplash.com/photo-1537996194471-e657df975ab4"
+  },
+  {
+    "id": 2,
+    "title": "Open Trip Raja Ampat",
+    "code": "TRV002",
+    "category": "Open Trip",
+    "brand": "AdventureID",
+    "price": 7200000,
+    "stock": 10,
+    "gambar": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
+  },
+  {
+    "id": 3,
+    "title": "Tiket Pesawat Jakarta - Tokyo",
+    "code": "TRV003",
+    "category": "Flight Ticket",
+    "brand": "AirAsia",
+    "price": 8500000,
+    "stock": 20,
+    "gambar": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05"
+  },
+  {
+    "id": 4,
+    "title": "Paket Honeymoon Lombok",
+    "code": "TRV004",
+    "category": "Honeymoon",
+    "brand": "RomanticTour",
+    "price": 5600000,
+    "stock": 8,
+    "gambar": "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+  },
+  {
+    "id": 5,
+    "title": "Tour Singapore 4 Hari",
+    "code": "TRV005",
+    "category": "International Tour",
+    "brand": "HolidayTrip",
+    "price": 6500000,
+    "stock": 12,
+    "gambar": "https://images.unsplash.com/photo-1525625293386-3f8f99389edd"
+  },
+  {
+    "id": 6,
+    "title": "Paket Wisata Bromo",
+    "code": "TRV006",
+    "category": "Local Tour",
+    "brand": "ExploreID",
+    "price": 1200000,
+    "stock": 25,
+    "gambar": "https://images.unsplash.com/photo-1519046904884-53103b34b206"
+  },
+  {
+    "id": 7,
+    "title": "Trip Labuan Bajo",
+    "code": "TRV007",
+    "category": "Island Tour",
+    "brand": "IslandTravel",
+    "price": 4800000,
+    "stock": 10,
+    "gambar": "https://images.unsplash.com/photo-1493558103817-58b2924bce98"
+  },
+  {
+    "id": 8,
+    "title": "Paket Umroh Reguler",
+    "code": "TRV008",
+    "category": "Religious Tour",
+    "brand": "SafarTour",
+    "price": 32000000,
+    "stock": 5,
+    "gambar": "https://images.unsplash.com/photo-1564769625905-50e93615e769"
+  },
+  {
+    "id": 9,
+    "title": "Paket Wisata Yogyakarta",
+    "code": "TRV009",
+    "category": "Local Tour",
+    "brand": "JogjaHoliday",
+    "price": 1750000,
+    "stock": 18,
+    "gambar": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c"
+  },
+  {
+    "id": 10,
+    "title": "Tour Thailand Bangkok",
+    "code": "TRV010",
+    "category": "International Tour",
+    "brand": "AsiaTrip",
+    "price": 5900000,
+    "stock": 14,
+    "gambar": "https://images.unsplash.com/photo-1508009603885-50cf7c579365"
+  },
+  {
+    "id": 11,
+    "title": "Paket Wisata Bandung",
+    "code": "TRV011",
+    "category": "Local Tour",
+    "brand": "HolidayID",
+    "price": 1400000,
+    "stock": 20,
+    "gambar": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+  },
+  {
+    "id": 12,
+    "title": "Paket Wisata Korea Selatan",
+    "code": "TRV012",
+    "category": "International Tour",
+    "brand": "KoreaTravel",
+    "price": 12500000,
+    "stock": 7,
+    "gambar": "https://images.unsplash.com/photo-1538485399081-7c897c1ab2f4"
+  },
+  {
+    "id": 13,
+    "title": "Tour Malaysia Kuala Lumpur",
+    "code": "TRV013",
+    "category": "International Tour",
+    "brand": "AsiaHoliday",
+    "price": 4500000,
+    "stock": 11,
+    "gambar": "https://images.unsplash.com/photo-1508964942454-1a56651d54ac"
+  },
+  {
+    "id": 14,
+    "title": "Paket Diving Bunaken",
+    "code": "TRV014",
+    "category": "Adventure",
+    "brand": "OceanTrip",
+    "price": 5200000,
+    "stock": 6,
+    "gambar": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
+  },
+  {
+    "id": 15,
+    "title": "Paket Camping Rinjani",
+    "code": "TRV015",
+    "category": "Adventure",
+    "brand": "MountainTour",
+    "price": 2100000,
+    "stock": 13,
+    "gambar": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429"
+  },
+  {
+    "id": 16,
+    "title": "Tiket Kapal Batam",
+    "code": "TRV016",
+    "category": "Transportation",
+    "brand": "SeaTravel",
+    "price": 450000,
+    "stock": 30,
+    "gambar": "https://images.unsplash.com/photo-1500375592092-40eb2168fd21"
+  },
+  {
+    "id": 17,
+    "title": "Tour Jepang Sakura",
+    "code": "TRV017",
+    "category": "International Tour",
+    "brand": "JapanHoliday",
+    "price": 18500000,
+    "stock": 5,
+    "gambar": "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e"
+  },
+  {
+    "id": 18,
+    "title": "Paket Wisata Danau Toba",
+    "code": "TRV018",
+    "category": "Local Tour",
+    "brand": "NorthTrip",
+    "price": 2400000,
+    "stock": 17,
+    "gambar": "https://images.unsplash.com/photo-1469474968028-56623f02e42e"
+  },
+  {
+    "id": 19,
+    "title": "Paket Wisata Karimunjawa",
+    "code": "TRV019",
+    "category": "Island Tour",
+    "brand": "IslandGo",
+    "price": 3300000,
+    "stock": 9,
+    "gambar": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
+  },
+  {
+    "id": 20,
+    "title": "Trip Pulau Seribu",
+    "code": "TRV020",
+    "category": "Island Tour",
+    "brand": "SeaAdventure",
+    "price": 950000,
+    "stock": 22,
+    "gambar": "https://images.unsplash.com/photo-1493558103817-58b2924bce98"
+  },
+  {
+    "id": 21,
+    "title": "Tour Eropa 10 Hari",
+    "code": "TRV021",
+    "category": "International Tour",
+    "brand": "EuroTravel",
+    "price": 28500000,
+    "stock": 4,
+    "gambar": "https://images.unsplash.com/photo-1491553895911-0055eca6402d"
+  },
+  {
+    "id": 22,
+    "title": "Paket Cruise Singapore",
+    "code": "TRV022",
+    "category": "Cruise",
+    "brand": "OceanHoliday",
+    "price": 9200000,
+    "stock": 6,
+    "gambar": "https://images.unsplash.com/photo-1500375592092-40eb2168fd21"
+  },
+  {
+    "id": 23,
+    "title": "Paket Backpacker Vietnam",
+    "code": "TRV023",
+    "category": "Backpacker",
+    "brand": "AsiaAdventure",
+    "price": 4800000,
+    "stock": 12,
+    "gambar": "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+  },
+  {
+    "id": 24,
+    "title": "Paket Wisata Belitung",
+    "code": "TRV024",
+    "category": "Beach Tour",
+    "brand": "IslandHoliday",
+    "price": 2700000,
+    "stock": 16,
+    "gambar": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
+  },
+  {
+    "id": 25,
+    "title": "Tour Dubai Luxury",
+    "code": "TRV025",
+    "category": "Luxury Tour",
+    "brand": "LuxuryTravel",
+    "price": 22000000,
+    "stock": 3,
+    "gambar": "https://images.unsplash.com/photo-1518684079-3c830dcef090"
+  },
+  {
+    "id": 26,
+    "title": "Paket Wisata Malang",
+    "code": "TRV026",
+    "category": "Local Tour",
+    "brand": "EastJavaTrip",
+    "price": 1650000,
+    "stock": 19,
+    "gambar": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+  },
+  {
+    "id": 27,
+    "title": "Trip Komodo Island",
+    "code": "TRV027",
+    "category": "Island Tour",
+    "brand": "KomodoTravel",
+    "price": 6100000,
+    "stock": 7,
+    "gambar": "https://images.unsplash.com/photo-1493558103817-58b2924bce98"
+  },
+  {
+    "id": 28,
+    "title": "Paket Family Trip Bali",
+    "code": "TRV028",
+    "category": "Family Tour",
+    "brand": "FamilyHoliday",
+    "price": 7800000,
+    "stock": 9,
+    "gambar": "https://images.unsplash.com/photo-1537996194471-e657df975ab4"
+  },
+  {
+    "id": 29,
+    "title": "Tour Australia Sydney",
+    "code": "TRV029",
+    "category": "International Tour",
+    "brand": "AussieTrip",
+    "price": 19800000,
+    "stock": 4,
+    "gambar": "https://images.unsplash.com/photo-1506973035872-a4f23efea3b6"
+  },
+  {
+    "id": 30,
+    "title": "Paket Wisata Dieng",
+    "code": "TRV030",
+    "category": "Nature Tour",
+    "brand": "NatureExplore",
+    "price": 1350000,
+    "stock": 21,
+    "gambar": "https://images.unsplash.com/photo-1469474968028-56623f02e42e"
+  }
+]

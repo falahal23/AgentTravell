@@ -1,0 +1,198 @@
+[
+  {
+    "id_customer": "CUST0001",
+    "customer_service": "Tidak Pernah Chat",
+    "riwayat_komplain": "Produk Tidak Sesuai",
+    "feedback": "Akan Membeli Lagi",
+    "catatan_admin": "Perlu Dihubungi Kembali"
+  },
+  {
+    "id_customer": "CUST0002",
+    "customer_service": "Menanyakan Promo",
+    "riwayat_komplain": "Produk Tidak Sesuai",
+    "feedback": "Kurang Puas",
+    "catatan_admin": "Berpotensi Upgrade Membership"
+  },
+  {
+    "id_customer": "CUST0003",
+    "customer_service": "Pernah Chat",
+    "riwayat_komplain": "Masalah Pembayaran",
+    "feedback": "Akan Membeli Lagi",
+    "catatan_admin": "Perlu Dihubungi Kembali"
+  },
+  {
+    "id_customer": "CUST0004",
+    "customer_service": "Menanyakan Jadwal",
+    "riwayat_komplain": "Masalah Pembayaran",
+    "feedback": "Akan Membeli Lagi",
+    "catatan_admin": "Sering Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0005",
+    "customer_service": "Konsultasi Produk",
+    "riwayat_komplain": "Produk Tidak Sesuai",
+    "feedback": "Akan Membeli Lagi",
+    "catatan_admin": "-"
+  },
+  {
+    "id_customer": "CUST0006",
+    "customer_service": "Tidak Pernah Chat",
+    "riwayat_komplain": "Kendala Login",
+    "feedback": "Kurang Puas",
+    "catatan_admin": "Customer Loyal"
+  },
+  {
+    "id_customer": "CUST0007",
+    "customer_service": "Konsultasi Produk",
+    "riwayat_komplain": "Kendala Login",
+    "feedback": "Sangat Puas",
+    "catatan_admin": "Sering Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0008",
+    "customer_service": "Tidak Pernah Chat",
+    "riwayat_komplain": "Komplain Layanan",
+    "feedback": "Sangat Puas",
+    "catatan_admin": "Perlu Follow Up"
+  },
+  {
+    "id_customer": "CUST0009",
+    "customer_service": "Menanyakan Promo",
+    "riwayat_komplain": "Produk Tidak Sesuai",
+    "feedback": "Cukup Puas",
+    "catatan_admin": "Perlu Dihubungi Kembali"
+  },
+  {
+    "id_customer": "CUST0010",
+    "customer_service": "Pernah Chat",
+    "riwayat_komplain": "Masalah Pembayaran",
+    "feedback": "Puas",
+    "catatan_admin": "Perlu Follow Up"
+  },
+  {
+    "id_customer": "CUST0011",
+    "customer_service": "Follow Up Pesanan",
+    "riwayat_komplain": "Produk Tidak Sesuai",
+    "feedback": "Akan Membeli Lagi",
+    "catatan_admin": "Berpotensi Upgrade Membership"
+  },
+  {
+    "id_customer": "CUST0012",
+    "customer_service": "Menanyakan Promo",
+    "riwayat_komplain": "Keterlambatan Pengiriman",
+    "feedback": "Puas",
+    "catatan_admin": "Berpotensi Upgrade Membership"
+  },
+  {
+    "id_customer": "CUST0013",
+    "customer_service": "Menanyakan Jadwal",
+    "riwayat_komplain": "Komplain Layanan",
+    "feedback": "Akan Membeli Lagi",
+    "catatan_admin": "Sering Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0014",
+    "customer_service": "Pernah Chat",
+    "riwayat_komplain": "Komplain Layanan",
+    "feedback": "Kurang Puas",
+    "catatan_admin": "-"
+  },
+  {
+    "id_customer": "CUST0015",
+    "customer_service": "Pernah Chat",
+    "riwayat_komplain": "Komplain Layanan",
+    "feedback": "Puas",
+    "catatan_admin": "Perlu Dihubungi Kembali"
+  },
+  {
+    "id_customer": "CUST0016",
+    "customer_service": "Follow Up Pesanan",
+    "riwayat_komplain": "Kendala Login",
+    "feedback": "Akan Membeli Lagi",
+    "catatan_admin": "-"
+  },
+  {
+    "id_customer": "CUST0017",
+    "customer_service": "Konsultasi Produk",
+    "riwayat_komplain": "Komplain Layanan",
+    "feedback": "Sangat Puas",
+    "catatan_admin": "Sering Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0018",
+    "customer_service": "Pernah Chat",
+    "riwayat_komplain": "Masalah Pembayaran",
+    "feedback": "Cukup Puas",
+    "catatan_admin": "Customer Loyal"
+  },
+  {
+    "id_customer": "CUST0019",
+    "customer_service": "Tidak Pernah Chat",
+    "riwayat_komplain": "Produk Tidak Sesuai",
+    "feedback": "Sangat Puas",
+    "catatan_admin": "Sering Menggunakan Promo"
+  },
+  {
+    "id_customer": "CUST0020",
+    "customer_service": "Menanyakan Promo",
+    "riwayat_komplain": "Tidak Ada",
+    "feedback": "Kurang Puas",
+    "catatan_admin": "Perlu Follow Up"
+  },
+  {
+    "id_customer": "CUST0021",
+    "customer_service": "Tidak Pernah Chat",
+    "riwayat_komplain": "Kendala Login",
+    "feedback": "Sangat Puas",
+    "catatan_admin": "Perlu Follow Up"
+  },
+  {
+    "id_customer": "CUST0022",
+    "customer_service": "Menanyakan Jadwal",
+    "riwayat_komplain": "Masalah Pembayaran",
+    "feedback": "Kurang Puas",
+    "catatan_admin": "Perlu Dihubungi Kembali"
+  },
+  {
+    "id_customer": "CUST0023",
+    "customer_service": "Menanyakan Promo",
+    "riwayat_komplain": "Komplain Layanan",
+    "feedback": "Puas",
+    "catatan_admin": "Customer Loyal"
+  },
+  {
+    "id_customer": "CUST0024",
+    "customer_service": "Tidak Pernah Chat",
+    "riwayat_komplain": "Keterlambatan Pengiriman",
+    "feedback": "Pelayanan Baik",
+    "catatan_admin": "Berpotensi Upgrade Membership"
+  },
+  {
+    "id_customer": "CUST0025",
+    "customer_service": "Follow Up Pesanan",
+    "riwayat_komplain": "Komplain Layanan",
+    "feedback": "Akan Membeli Lagi",
+    "catatan_admin": "Perlu Follow Up"
+  },
+  {
+    "id_customer": "CUST0026",
+    "customer_service": "Tidak Pernah Chat",
+    "riwayat_komplain": "Masalah Pembayaran",
+    "feedback": "Pelayanan Baik",
+    "catatan_admin": "Perlu Dihubungi Kembali"
+  },
+  {
+    "id_customer": "CUST0027",
+    "customer_service": "Follow Up Pesanan",
+    "riwayat_komplain": "Tidak Ada",
+    "feedback": "Cukup Puas",
+    "catatan_admin": "Perlu Follow Up"
+  },
+  {
+    "id_customer": "CUST0028",
+    "customer_service": "Konsultasi Produk",
+    "riwayat_komplain": "Tidak Ada",
+    "feedback": "Puas",
+    "catatan_admin": "Perlu Dihubungi Kembali"
+  }
+]

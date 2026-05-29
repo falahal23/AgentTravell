@@ -1,0 +1,29 @@
+[
+  {
+    "id": "TRX-LPR-001",
+    "date": "2026-05-01",
+    "customer": "Falahal Nabil",
+    "package": "Eksplorasi Raja Ampat",
+    "amount": 15000000,
+    "method": "BCA Transfer",
+    "status": "Success"
+  },
+  {
+    "id": "TRX-LPR-002",
+    "date": "2026-05-02",
+    "customer": "Rizky Ramadhan",
+    "package": "Sunrise Bromo",
+    "amount": 5000000,
+    "method": "OVO",
+    "status": "Success"
+  },
+  {
+    "id": "TRX-LPR-003",
+    "date": "2026-05-03",
+    "customer": "Dewi Lestari",
+    "package": "Bali Tropical",
+    "amount": 4500000,
+    "method": "Mandiri",
+    "status": "Success"
+  }
+]

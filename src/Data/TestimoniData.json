@@ -1,0 +1,29 @@
+[
+  {
+    "id": "REV-001",
+    "name": "Siti Aminah",
+    "avatar": "https://i.pravatar.cc/150?u=siti",
+    "rating": 5,
+    "review": "Pengalaman luar biasa! Guide sangat ramah dan hotelnya benar-benar mewah. Gak nyesel pilih paket Luxury.",
+    "date": "2026-04-15",
+    "status": "Published"
+  },
+  {
+    "id": "REV-002",
+    "name": "Budi Santoso",
+    "avatar": "https://i.pravatar.cc/150?u=budi",
+    "rating": 4,
+    "review": "Pemandangan Bromo keren banget, cuma sayang waktu sarapan menunya kurang variatif. Selebihnya oke!",
+    "date": "2026-04-18",
+    "status": "Pending"
+  },
+  {
+    "id": "REV-003",
+    "name": "Jessica Mila",
+    "avatar": "https://i.pravatar.cc/150?u=jessica",
+    "rating": 2,
+    "review": "Jadwalnya terlalu padat, saya jadi capek di jalan. Perlu perbaikan di manajemen waktu.",
+    "date": "2026-04-20",
+    "status": "Hidden"
+  }
+]

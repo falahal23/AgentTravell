@@ -1,0 +1,32 @@
+[
+  {
+    "id": "TRX-9901",
+    "customerName": "Falahal Nabil",
+    "packageName": "Eksplorasi Raja Ampat",
+    "amount": 15000000,
+    "method": "Bank Transfer (BCA)",
+    "date": "2026-05-04 10:20",
+    "status": "Pending",
+    "proof": "https://api.dicebear.com/7.x/identicon/svg?seed=receipt1"
+  },
+  {
+    "id": "TRX-9902",
+    "customerName": "Rizky Ramadhan",
+    "packageName": "Sunrise Bromo Milky Way",
+    "amount": 5000000,
+    "method": "E-Wallet (OVO)",
+    "date": "2026-05-04 11:45",
+    "status": "Verified",
+    "proof": "https://api.dicebear.com/7.x/identicon/svg?seed=receipt2"
+  },
+  {
+    "id": "TRX-9903",
+    "customerName": "Dewi Lestari",
+    "packageName": "Bali Tropical Getaway",
+    "amount": 4500000,
+    "method": "Bank Transfer (Mandiri)",
+    "date": "2026-05-04 09:15",
+    "status": "Rejected",
+    "proof": "https://api.dicebear.com/7.x/identicon/svg?seed=receipt3"
+  }
+]

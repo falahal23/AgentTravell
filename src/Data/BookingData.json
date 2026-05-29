@@ -1,0 +1,29 @@
+[
+  {
+    "id": "BK-2026-001",
+    "customerName": "Falahal Nabil",
+    "packageName": "Eksplorasi Raja Ampat",
+    "pax": 2,
+    "totalPrice": 15000000,
+    "bookingDate": "2026-05-01",
+    "status": "Confirmed"
+  },
+  {
+    "id": "BK-2026-002",
+    "customerName": "Andi Wijaya",
+    "packageName": "Sunrise Bromo Milky Way",
+    "pax": 4,
+    "totalPrice": 5000000,
+    "bookingDate": "2026-05-02",
+    "status": "Pending"
+  },
+  {
+    "id": "BK-2026-003",
+    "customerName": "Siti Aminah",
+    "packageName": "Bali Tropical Getaway",
+    "pax": 1,
+    "totalPrice": 4500000,
+    "bookingDate": "2026-05-03",
+    "status": "Cancelled"
+  }
+]

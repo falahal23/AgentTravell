@@ -1,0 +1,245 @@
+[
+    {
+        "id_customer": "CUST0001",
+        "nomor_hp": "088244586568",
+        "email": "user0001@gmail.com",
+        "alamat": "Jl. Mawar No. 119",
+        "kota": "Palembang",
+        "provinsi": "Sumatera Barat"
+    },
+    {
+        "id_customer": "CUST0002",
+        "nomor_hp": "082870751683",
+        "email": "user0002@gmail.com",
+        "alamat": "Jl. Melati No. 55",
+        "kota": "Padang",
+        "provinsi": "Sumatera Barat"
+    },
+    {
+        "id_customer": "CUST0003",
+        "nomor_hp": "087601756587",
+        "email": "user0003@gmail.com",
+        "alamat": "Jl. Anggrek No. 296",
+        "kota": "Padang",
+        "provinsi": "Riau"
+    },
+    {
+        "id_customer": "CUST0004",
+        "nomor_hp": "089517998922",
+        "email": "user0004@gmail.com",
+        "alamat": "Jl. Mawar No. 252",
+        "kota": "Pekanbaru",
+        "provinsi": "DKI Jakarta"
+    },
+    {
+        "id_customer": "CUST0005",
+        "nomor_hp": "085063015547",
+        "email": "user0005@gmail.com",
+        "alamat": "Jl. Kenanga No. 209",
+        "kota": "Batam",
+        "provinsi": "Kepulauan Riau"
+    },
+    {
+        "id_customer": "CUST0006",
+        "nomor_hp": "084894154556",
+        "email": "user0006@gmail.com",
+        "alamat": "Jl. Merdeka No. 270",
+        "kota": "Bandung",
+        "provinsi": "Jawa Barat"
+    },
+    {
+        "id_customer": "CUST0007",
+        "nomor_hp": "087096971191",
+        "email": "user0007@gmail.com",
+        "alamat": "Jl. Sudirman No. 139",
+        "kota": "Palembang",
+        "provinsi": "Sumatera Selatan"
+    },
+    {
+        "id_customer": "CUST0008",
+        "nomor_hp": "083624003067",
+        "email": "user0008@gmail.com",
+        "alamat": "Jl. Diponegoro No. 157",
+        "kota": "Medan",
+        "provinsi": "Sumatera Utara"
+    },
+    {
+        "id_customer": "CUST0009",
+        "nomor_hp": "080646841499",
+        "email": "user0009@gmail.com",
+        "alamat": "Jl. Ahmad Yani No. 50",
+        "kota": "Padang",
+        "provinsi": "Sumatera Barat"
+    },
+    {
+        "id_customer": "CUST0010",
+        "nomor_hp": "082609760813",
+        "email": "user0010@gmail.com",
+        "alamat": "Jl. Mawar No. 219",
+        "kota": "Padang",
+        "provinsi": "Riau"
+    },
+
+    {
+        "id_customer": "CUST0011",
+        "nomor_hp": "081234567811",
+        "email": "user0011@gmail.com",
+        "alamat": "Jl. Sakura No. 12",
+        "kota": "Dumai",
+        "provinsi": "Riau"
+    },
+    {
+        "id_customer": "CUST0012",
+        "nomor_hp": "081234567812",
+        "email": "user0012@gmail.com",
+        "alamat": "Jl. Cempaka No. 45",
+        "kota": "Jakarta",
+        "provinsi": "DKI Jakarta"
+    },
+    {
+        "id_customer": "CUST0013",
+        "nomor_hp": "081234567813",
+        "email": "user0013@gmail.com",
+        "alamat": "Jl. Flamboyan No. 88",
+        "kota": "Yogyakarta",
+        "provinsi": "DI Yogyakarta"
+    },
+    {
+        "id_customer": "CUST0014",
+        "nomor_hp": "081234567814",
+        "email": "user0014@gmail.com",
+        "alamat": "Jl. Pahlawan No. 90",
+        "kota": "Bogor",
+        "provinsi": "Jawa Barat"
+    },
+    {
+        "id_customer": "CUST0015",
+        "nomor_hp": "081234567815",
+        "email": "user0015@gmail.com",
+        "alamat": "Jl. Kartini No. 43",
+        "kota": "Batam",
+        "provinsi": "Kepulauan Riau"
+    },
+
+    {
+        "id_customer": "CUST0016",
+        "nomor_hp": "081234567816",
+        "email": "user0016@gmail.com",
+        "alamat": "Jl. Garuda No. 15",
+        "kota": "Medan",
+        "provinsi": "Sumatera Utara"
+    },
+    {
+        "id_customer": "CUST0017",
+        "nomor_hp": "081234567817",
+        "email": "user0017@gmail.com",
+        "alamat": "Jl. Rajawali No. 74",
+        "kota": "Bandung",
+        "provinsi": "Jawa Barat"
+    },
+    {
+        "id_customer": "CUST0018",
+        "nomor_hp": "081234567818",
+        "email": "user0018@gmail.com",
+        "alamat": "Jl. Mangga No. 21",
+        "kota": "Jakarta",
+        "provinsi": "DKI Jakarta"
+    },
+    {
+        "id_customer": "CUST0019",
+        "nomor_hp": "081234567819",
+        "email": "user0019@gmail.com",
+        "alamat": "Jl. Apel No. 62",
+        "kota": "Pekanbaru",
+        "provinsi": "Riau"
+    },
+    {
+        "id_customer": "CUST0020",
+        "nomor_hp": "081234567820",
+        "email": "user0020@gmail.com",
+        "alamat": "Jl. Durian No. 35",
+        "kota": "Palembang",
+        "provinsi": "Sumatera Selatan"
+    },
+
+    {
+        "id_customer": "CUST0021",
+        "nomor_hp": "081234567821",
+        "email": "user0021@gmail.com",
+        "alamat": "Jl. Melur No. 18",
+        "kota": "Padang",
+        "provinsi": "Sumatera Barat"
+    },
+    {
+        "id_customer": "CUST0022",
+        "nomor_hp": "081234567822",
+        "email": "user0022@gmail.com",
+        "alamat": "Jl. Teratai No. 40",
+        "kota": "Bandung",
+        "provinsi": "Jawa Barat"
+    },
+    {
+        "id_customer": "CUST0023",
+        "nomor_hp": "081234567823",
+        "email": "user0023@gmail.com",
+        "alamat": "Jl. Kenari No. 72",
+        "kota": "Jakarta",
+        "provinsi": "DKI Jakarta"
+    },
+    {
+        "id_customer": "CUST0024",
+        "nomor_hp": "081234567824",
+        "email": "user0024@gmail.com",
+        "alamat": "Jl. Mawar No. 244",
+        "kota": "Batam",
+        "provinsi": "Kepulauan Riau"
+    },
+    {
+        "id_customer": "CUST0025",
+        "nomor_hp": "081234567825",
+        "email": "user0025@gmail.com",
+        "alamat": "Jl. Merpati No. 56",
+        "kota": "Yogyakarta",
+        "provinsi": "DI Yogyakarta"
+    },
+    {
+        "id_customer": "CUST0026",
+        "nomor_hp": "081234567826",
+        "email": "user0026@gmail.com",
+        "alamat": "Jl. Elang No. 33",
+        "kota": "Medan",
+        "provinsi": "Sumatera Utara"
+    },
+    {
+        "id_customer": "CUST0027",
+        "nomor_hp": "081234567827",
+        "email": "user0027@gmail.com",
+        "alamat": "Jl. Nusa Indah No. 22",
+        "kota": "Bogor",
+        "provinsi": "Jawa Barat"
+    },
+    {
+        "id_customer": "CUST0028",
+        "nomor_hp": "081234567828",
+        "email": "user0028@gmail.com",
+        "alamat": "Jl. Mawar No. 4",
+        "kota": "Palembang",
+        "provinsi": "Sumatera Selatan"
+    },
+    {
+        "id_customer": "CUST0029",
+        "nomor_hp": "081234567829",
+        "email": "user0029@gmail.com",
+        "alamat": "Jl. Anggrek No. 267",
+        "kota": "Bogor",
+        "provinsi": "Jawa Barat"
+    },
+    {
+        "id_customer": "CUST0030",
+        "nomor_hp": "081234567830",
+        "email": "user0030@gmail.com",
+        "alamat": "Jl. Mawar No. 17",
+        "kota": "Jakarta",
+        "provinsi": "DKI Jakarta"
+    }
+]
