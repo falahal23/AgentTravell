@@ -1,9 +1,9 @@
 import { Outlet } from "react-router-dom";
 
-import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import RightPanel from "../components/RightPanel";
 import Footer from "../components/Footer";
+import Sidebar from "../components/Sidebar";
 
 export default function MainLayout() {
   return (
