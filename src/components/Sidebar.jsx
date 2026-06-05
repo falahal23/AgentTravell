@@ -80,7 +80,7 @@ export default function Sidebar() {
             <div className="w-1.5 h-3 bg-pink-300 rounded-sm"></div>
             <div className="w-1.5 h-5 bg-blue-300 rounded-sm"></div>
           </div>
-        </div> */} */
+        </div> */}
 
         {/* Logout Button */}
         <button 
