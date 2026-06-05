@@ -1,7 +1,6 @@
 import React from 'react'
 
-export default function Spinner({ size = 6, className = '' }) {
-  const s = `${size}h-${size}w`
+export default function Spinner({ className = '' }) {
   return (
     <div className={`flex items-center justify-center ${className}`}>
       <svg className="animate-spin h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
