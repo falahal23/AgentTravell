@@ -1,153 +1,97 @@
-import { NavLink } from "react-router-dom";
-
-import {
-  MdSpaceDashboard,
-  MdPayments,
-  MdOutlineMessage,
-  MdFavoriteBorder,
-  MdOutlineExplore,
-} from "react-icons/md";
-
-import {
-  FaFileInvoiceDollar,
-  FaUsers,
-  FaPuzzlePiece,
-  FaPlane,
-  FaArrowRight,
-} from "react-icons/fa";
-
-import { HiOutlineLogout } from "react-icons/hi";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import { FaPlane } from "react-icons/fa";
+import { FiUsers, FiFileText, FiHeart, FiMessageSquare, FiCreditCard, FiBox, FiLogOut } from "react-icons/fi";
+import { BsArrowRight } from "react-icons/bs";
 
 export default function Sidebar() {
+  const location = useLocation();
+
   const menuItems = [
-    {
-      path: "/",
-      icon: MdSpaceDashboard,
-      label: "Dashboard",
-    },
-
-    {
-      path: "/customers",
-      icon: FaUsers,
-      label: "Data Customers",
-    },
-
-    {
-      path: "/data-kontak",
-      icon: FaFileInvoiceDollar,
-      label: "Data Kontak",
-    },
-
-    {
-      path: "/membership",
-      icon: MdFavoriteBorder,
-      label: "Membership",
-    },
-
-    {
-      path: "/riwayat-interaksi",
-      icon: MdOutlineMessage,
-      label: "Interaksi",
-    },
-
-    {
-      path: "/data-transaksi",
-      icon: MdPayments,
-      label: "Transaksi",
-    },
-
-    {
-      path: "/aktivitas-user",
-      icon: MdOutlineExplore,
-      label: "Aktivitas",
-    },
-
-    {
-      path: "/marketing",
-      icon: FaPuzzlePiece,
-      label: "Marketing",
-    },
+    { path: "/", icon: FiFileText, label: "Dashboard" },
+    { path: "/customers", icon: FiUsers, label: "Data Customers" },
+    { path: "/data-kontak", icon: FiFileText, label: "Data Kontak" },
+    { path: "/membership", icon: FiHeart, label: "Membership" },
+    { path: "/riwayat-interaksi", icon: FiMessageSquare, label: "Interaksi" },
+    { path: "/data-transaksi", icon: FiCreditCard, label: "Transaksi" },
+    { path: "/aktivitas-user", icon: FiBox, label: "Aktivitas" },
+    { path: "/marketing", icon: FiBox, label: "Marketing" },
   ];
 
-  const menuClass = ({ isActive }) =>
-    `flex items-center gap-4 h-[42px] rounded-xl px-4 text-sm font-semibold transition-all ${
-      isActive
-        ? "bg-[#0A257F] text-white"
-        : "text-gray-400 hover:bg-blue-50 hover:text-[#0A257F]"
-    }`;
-
   return (
-    <aside className="h-screen bg-white px-5 py-6 flex flex-col justify-between">
-      {/* ATAS */}
-
-      <div>
-        {/* LOGO */}
-
-        <div className="flex justify-center items-center gap-2 mb-10">
-          <FaPlane className="text-[#0A257F] text-lg -rotate-45" />
-          <h1 className="text-[22px] font-black text-[#0A257F]">GoTravel</h1>
+    <aside className="w-64 h-screen bg-white flex flex-col border-r border-gray-200 overflow-hidden">
+      
+      {/* HEADER LOGO */}
+      <div className="px-6 py-5 border-b border-gray-100">
+        <div className="flex items-center gap-2">
+          <FaPlane className="text-2xl text-blue-600 transform -rotate-45" />
+          <span className="text-lg font-bold text-gray-900">GoTravell</span>
         </div>
-
-        {/* MENU */}
-
-        <nav>
-          <ul className="space-y-3">
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-
-              return (
-                <li key={item.path}>
-                  <NavLink
-                    to={item.path}
-                    end={item.path === "/"}
-                    className={menuClass}
-                  >
-                    <Icon className="text-lg" />
-                    <span>{item.label}</span>
-                  </NavLink>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
       </div>
 
-      {/* BAWAH */}
+      {/* NAVIGATION MENU */}
+      <nav className="flex-1 px-3 py-4 overflow-y-auto">
+        <ul className="space-y-1">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = 
+              item.path === "/" 
+                ? location.pathname === "/" 
+                : location.pathname.startsWith(item.path);
 
-      <div>
-        {/* CARD */}
+            return (
+              <li key={item.path}>
+                <Link
+                  to={item.path}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                    isActive
+                      ? "bg-blue-600 text-white font-semibold"
+                      : "text-gray-400 hover:text-gray-600"
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="text-sm">{item.label}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
 
-        <div className="relative bg-[#D6E9FF] rounded-[28px] h-[145px] overflow-hidden mb-10">
-          <div className="absolute top-0 left-0 bg-[#0A257F] text-white w-[85%] h-[95px] rounded-br-[50px] p-4">
-            <h3 className="font-bold text-sm">50% Discount!</h3>
-
-            <p className="text-[10px] mt-3">
-              Get a discount on certain days and dont miss it.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            className="absolute bottom-4 left-4 bg-[#0A257F] text-white w-7 h-7 rounded-full flex items-center justify-center"
-          >
-            <FaArrowRight size={10} />
+      {/* BOTTOM SECTION */}
+      <div className="px-4 py-4 border-t border-gray-100">
+        
+        {/* Promo Card */}
+        {/* <div className="mb-5 bg-blue-50 rounded-xl p-4 relative overflow-hidden">
+          <h4 className="text-blue-600 font-semibold text-sm mb-2">
+            Fitur Baru! 🎉
+          </h4>
+          <p className="text-blue-600 text-xs leading-relaxed mb-3">
+            Ekspor laporan otomatis dan hemat lebih banyak waktu.
+          </p>
+          
+          <button className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors absolute bottom-3 left-4 text-white">
+            <BsArrowRight className="text-lg" />
           </button>
-        </div>
 
-        {/* LOGOUT */}
+          {/* Bar Chart Graphic */}
+          {/* <div className="absolute right-3 bottom-2 flex items-end gap-1 h-8">
+            <div className="w-1.5 h-4 bg-green-300 rounded-sm"></div>
+            <div className="w-1.5 h-3 bg-pink-300 rounded-sm"></div>
+            <div className="w-1.5 h-5 bg-blue-300 rounded-sm"></div>
+          </div>
+        </div> */} */
 
-        <button
-          type="button"
-          onClick={() => {
-            console.log("Logout clicked");
-            // TODO: Implement logout functionality
-          }}
-          className="flex items-center gap-4 text-gray-400 hover:text-red-500 text-sm px-3"
-          title="Click to logout"
+        {/* Logout Button */}
+        <button 
+          onClick={() => console.log("Logout")}
+          className="flex items-center gap-3 w-full px-4 py-3 text-gray-400 hover:text-gray-600 rounded-lg transition-colors"
+          title="Logout"
         >
-          <HiOutlineLogout size={20} />
-          Log Out
+          <FiLogOut className="w-5 h-5" />
+          <span className="text-sm">Log Out</span>
         </button>
+        
       </div>
     </aside>
   );
