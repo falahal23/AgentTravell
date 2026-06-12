@@ -11,7 +11,7 @@ export default function Sidebar() {
     { path: "/", icon: FiFileText, label: "Dashboard" },
     { path: "/customers", icon: FiUsers, label: "Data Customers" },
     { path: "/data-kontak", icon: FiFileText, label: "Data Kontak" },
-    { path: "/membership", icon: FiHeart, label: "Membership" },
+    // { path: "/membership", icon: FiHeart, label: "Membership" },
     { path: "/riwayat-interaksi", icon: FiMessageSquare, label: "Interaksi" },
     { path: "/data-transaksi", icon: FiCreditCard, label: "Transaksi" },
     { path: "/aktivitas-user", icon: FiBox, label: "Aktivitas" },

@@ -1,134 +1,327 @@
-import { useState } from "react";
-
+import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import dataInteraksi from "../Data/RiwayatInteraksi.json";
+import { FaEye, FaTrash, FaSearch, FaFilter, FaSyncAlt } from "react-icons/fa";
 
-import { FaEye, FaTrash, FaSearch } from "react-icons/fa";
+function getInitials(name) {
+  return name
+    ?.split(" ")
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
+}
+
+function FeedbackBadge({ value }) {
+  const map = {
+    positif: "bg-green-100 text-green-700",
+    negatif: "bg-red-100 text-red-600",
+    netral: "bg-yellow-100 text-yellow-700",
+  };
+  return (
+    <span
+      className={`text-xs px-3 py-1 rounded-full font-medium ${map[value?.toLowerCase()] || "bg-gray-100 text-gray-500"}`}
+    >
+      {value}
+    </span>
+  );
+}
+
+const FEEDBACK_OPTIONS = ["Semua", "Positif", "Negatif", "Netral"];
+const SORT_OPTIONS = [
+  { value: "", label: "— Urutkan —" },
+  { value: "id-asc", label: "ID: A → Z" },
+  { value: "id-desc", label: "ID: Z → A" },
+  { value: "cs-asc", label: "CS: A → Z" },
+  { value: "pos-first", label: "Positif dulu" },
+  { value: "neg-first", label: "Negatif dulu" },
+];
 
 export default function RiwayatInteraksi() {
+  const navigate = useNavigate();
   const [data, setData] = useState(dataInteraksi);
-
   const [search, setSearch] = useState("");
-
+  const [activeFeedback, setActiveFeedback] = useState("Semua");
+  const [activeCS, setActiveCS] = useState("Semua");
+  const [sortBy, setSortBy] = useState("");
   const [detail, setDetail] = useState(null);
 
-  // HAPUS DATA
-  const hapusData = (id) => {
-    if (window.confirm("Hapus riwayat interaksi?")) {
-      setData(data.filter((item) => item.id_customer !== id));
-    }
+  const csOptions = useMemo(
+    () => ["Semua", ...new Set(dataInteraksi.map((i) => i.customer_service))],
+    [],
+  );
+
+  const filtered = useMemo(() => {
+    let result = data.filter((item) => {
+      const matchFeed =
+        activeFeedback === "Semua" ||
+        item.feedback?.toLowerCase() === activeFeedback.toLowerCase();
+      const matchCS =
+        activeCS === "Semua" || item.customer_service === activeCS;
+      const q = search.toLowerCase();
+      const matchQ =
+        !q ||
+        item.id_customer?.toLowerCase().includes(q) ||
+        item.customer_service?.toLowerCase().includes(q) ||
+        item.feedback?.toLowerCase().includes(q) ||
+        item.riwayat_komplain?.toLowerCase().includes(q);
+      return matchFeed && matchCS && matchQ;
+    });
+
+    if (sortBy === "id-asc")
+      result.sort((a, b) => a.id_customer.localeCompare(b.id_customer));
+    else if (sortBy === "id-desc")
+      result.sort((a, b) => b.id_customer.localeCompare(a.id_customer));
+    else if (sortBy === "cs-asc")
+      result.sort((a, b) =>
+        a.customer_service.localeCompare(b.customer_service),
+      );
+    else if (sortBy === "pos-first")
+      result.sort((a) => (a.feedback === "Positif" ? -1 : 1));
+    else if (sortBy === "neg-first")
+      result.sort((a) => (a.feedback === "Negatif" ? -1 : 1));
+
+    return result;
+  }, [data, search, activeFeedback, activeCS, sortBy]);
+
+  const resetFilters = () => {
+    setSearch("");
+    setActiveFeedback("Semua");
+    setActiveCS("Semua");
+    setSortBy("");
   };
 
-  // SEARCH
-  const filterData = data.filter(
-    (item) =>
-      item.id_customer?.toLowerCase().includes(search.toLowerCase()) ||
-      item.customer_service?.toLowerCase().includes(search.toLowerCase()) ||
-      item.feedback?.toLowerCase().includes(search.toLowerCase()),
-  );
+  const hapus = (id) => {
+    if (window.confirm("Hapus riwayat interaksi ini?"))
+      setData((prev) => prev.filter((i) => i.id_customer !== id));
+  };
+
+  const hasFilter =
+    activeFeedback !== "Semua" || activeCS !== "Semua" || search;
+  const pillFeedback = {
+    Semua: "bg-[#1018A8] text-white",
+    Positif: "bg-green-100 text-green-700",
+    Negatif: "bg-red-100 text-red-600",
+    Netral: "bg-yellow-100 text-yellow-700",
+  };
 
   return (
     <div className="min-h-screen bg-[#EAF2FF] p-6">
       {/* HEADER */}
-
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-start gap-4 mb-5">
         <div>
-          <h1 className="text-2xl font-bold">Riwayat Interaksi</h1>
-
-          <p className="text-gray-400">Monitoring komunikasi pelanggan</p>
+          <h1 className="text-2xl font-semibold">Riwayat Interaksi</h1>
+          <p className="text-gray-400 text-sm">
+            Monitoring komunikasi pelanggan
+          </p>
         </div>
-
-        <div className="bg-white px-4 py-3 rounded-xl flex gap-3">
-          <FaSearch className="text-gray-400" />
-
+        <div className="bg-white px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm">
+          <FaSearch className="text-gray-400 text-sm" />
           <input
-            placeholder="Cari interaksi..."
-            className="outline-none"
+            placeholder="Cari ID, CS, atau feedback..."
+            className="outline-none text-sm w-48"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </div>
 
-      {/* TABLE */}
+      {/* STATS */}
+      <div className="grid grid-cols-3 gap-3 mb-5">
+        {[
+          { label: "Total Interaksi", value: filtered.length, color: "" },
+          {
+            label: "Feedback Positif",
+            value: filtered.filter((i) => i.feedback === "Positif").length,
+            color: "text-green-600",
+          },
+          {
+            label: "Perlu Tindak Lanjut",
+            value: filtered.filter((i) => i.feedback === "Negatif").length,
+            color: "text-red-500",
+          },
+        ].map((s) => (
+          <div key={s.label} className="bg-white rounded-2xl p-4 shadow-sm">
+            <p className="text-xs text-gray-400 mb-1">{s.label}</p>
+            <p className={`text-2xl font-semibold ${s.color}`}>{s.value}</p>
+          </div>
+        ))}
+      </div>
 
-      <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
-        <table className="w-full text-center">
-          <thead className="bg-[#1018A8] text-white">
-            <tr>
-              <th className="p-4">ID Customer</th>
-
-              <th>Customer Service</th>
-
-              <th>Riwayat Komplain</th>
-
-              <th>Feedback</th>
-
-              <th>Catatan Admin</th>
-
-              <th>Aksi</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {filterData.map((item) => (
-              <tr key={item.id_customer} className="border-b hover:bg-blue-50">
-                <td className="p-4 font-semibold">{item.id_customer}</td>
-
-                <td>{item.customer_service}</td>
-
-                <td>{item.riwayat_komplain}</td>
-
-                <td>
-                  <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
-                    {item.feedback}
-                  </span>
-                </td>
-
-                <td>{item.catatan_admin}</td>
-
-                <td>
-                  <div className="flex justify-center gap-3">
-                    <button
-                      onClick={() => setDetail(item)}
-                      className="bg-blue-100 text-blue-600 p-3 rounded-lg"
-                    >
-                      <FaEye />
-                    </button>
-
-                    <button
-                      onClick={() => hapusData(item.id_customer)}
-                      className="bg-red-100 text-red-600 p-3 rounded-lg"
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                </td>
-              </tr>
+      {/* FILTER BAR */}
+      <div className="bg-white rounded-2xl p-4 shadow-sm mb-5 flex flex-wrap gap-5 items-end">
+        {/* Filter Feedback */}
+        <div className="flex flex-col gap-2">
+          <p className="text-xs text-gray-400 font-medium flex items-center gap-1">
+            <FaFilter className="text-xs" /> Feedback
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {FEEDBACK_OPTIONS.map((f) => (
+              <button
+                key={f}
+                onClick={() => setActiveFeedback(f)}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                  activeFeedback === f
+                    ? pillFeedback[f] + " border-transparent"
+                    : "bg-gray-50 text-gray-500 border-gray-200 hover:border-gray-400"
+                }`}
+              >
+                {f}
+              </button>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
+
+        {/* Filter CS */}
+        <div className="flex flex-col gap-2">
+          <p className="text-xs text-gray-400 font-medium">Customer Service</p>
+          <div className="flex flex-wrap gap-2">
+            {csOptions.map((cs) => (
+              <button
+                key={cs}
+                onClick={() => setActiveCS(cs)}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                  activeCS === cs
+                    ? cs === "Semua"
+                      ? "bg-[#1018A8] text-white border-transparent"
+                      : "bg-blue-100 text-blue-700 border-transparent"
+                    : "bg-gray-50 text-gray-500 border-gray-200 hover:border-gray-400"
+                }`}
+              >
+                {cs === "Semua" ? cs : cs.split(" ")[0]}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Sort */}
+        <div className="flex flex-col gap-2">
+          <p className="text-xs text-gray-400 font-medium">Urutkan</p>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 text-gray-700 outline-none"
+          >
+            {SORT_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Reset */}
+        {hasFilter && (
+          <button
+            onClick={resetFilters}
+            className="flex items-center gap-1.5 text-xs text-red-500 border border-red-200 bg-red-50 px-3 py-1.5 rounded-lg hover:bg-red-100 transition-all self-end"
+          >
+            <FaSyncAlt /> Reset
+          </button>
+        )}
+      </div>
+
+      {/* RESULT INFO */}
+      {hasFilter && (
+        <p className="text-xs text-gray-400 mb-3">
+          Menampilkan{" "}
+          <span className="font-semibold text-gray-700">{filtered.length}</span>{" "}
+          dari{" "}
+          <span className="font-semibold text-gray-700">{data.length}</span>{" "}
+          interaksi
+        </p>
+      )}
+
+      {/* CARD GRID */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        {filtered.length === 0 && (
+          <p className="text-gray-400 text-sm col-span-full text-center py-12">
+            Tidak ada data yang cocok dengan filter.
+          </p>
+        )}
+        {filtered.map((item) => (
+          <div
+            key={item.id_customer}
+            className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:border-blue-200 transition-colors"
+          >
+            <div className="flex justify-between items-center mb-3">
+              <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                {item.id_customer}
+              </span>
+              <FeedbackBadge value={item.feedback} />
+            </div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xs font-semibold flex-shrink-0">
+                {getInitials(item.customer_service)}
+              </div>
+              <div>
+                <p className="text-sm font-medium">{item.customer_service}</p>
+                <p className="text-xs text-gray-400">Customer Service</p>
+              </div>
+            </div>
+            <hr className="border-gray-100 mb-3" />
+            <div className="space-y-1.5 text-xs text-gray-600">
+              <div className="flex gap-2">
+                <span className="text-gray-400 w-16 flex-shrink-0">
+                  Komplain
+                </span>
+                <span>{item.riwayat_komplain}</span>
+              </div>
+              <div className="flex gap-2">
+                <span className="text-gray-400 w-16 flex-shrink-0">
+                  Catatan
+                </span>
+                <span>{item.catatan_admin}</span>
+              </div>
+            </div>
+            <div className="flex gap-2 mt-4">
+              <button
+                onClick={() =>
+                  navigate(`/detail-interaksi/${item.id_customer}`)
+                }
+                className="flex-1 flex items-center justify-center gap-1.5 bg-blue-50 text-blue-600 text-xs py-2 rounded-xl hover:bg-blue-100 transition-colors"
+              >
+                <FaEye /> Detail
+              </button>
+              <button
+                onClick={() => hapus(item.id_customer)}
+                className="flex-1 flex items-center justify-center gap-1.5 bg-red-50 text-red-500 text-xs py-2 rounded-xl hover:bg-red-100 transition-colors"
+              >
+                <FaTrash /> Hapus
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* MODAL */}
-
       {detail && (
-        <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
-          <div className="bg-white rounded-xl p-6 w-[450px]">
-            <h2 className="font-bold text-xl mb-5">Detail Interaksi</h2>
-
-            <p>ID : {detail.id_customer}</p>
-
-            <p>CS : {detail.customer_service}</p>
-
-            <p>Komplain : {detail.riwayat_komplain}</p>
-
-            <p>Feedback : {detail.feedback}</p>
-
-            <p>Catatan : {detail.catatan_admin}</p>
-
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+          <div className="bg-white rounded-2xl p-6 w-[420px] shadow-xl">
+            <h2 className="font-semibold text-lg mb-4">Detail Interaksi</h2>
+            {[
+              { label: "ID Customer", value: detail.id_customer },
+              { label: "Customer Service", value: detail.customer_service },
+              { label: "Komplain", value: detail.riwayat_komplain },
+              {
+                label: "Feedback",
+                value: <FeedbackBadge value={detail.feedback} />,
+              },
+              { label: "Catatan Admin", value: detail.catatan_admin },
+            ].map((row, i) => (
+              <div
+                key={i}
+                className="flex gap-3 py-2.5 border-b border-gray-100 text-sm last:border-none"
+              >
+                <span className="text-gray-400 w-32 flex-shrink-0">
+                  {row.label}
+                </span>
+                <span className="font-medium text-gray-800">{row.value}</span>
+              </div>
+            ))}
             <button
               onClick={() => setDetail(null)}
-              className="bg-[#1018A8] text-white w-full py-3 rounded-xl mt-5"
+              className="bg-[#1018A8] text-white w-full py-3 rounded-xl mt-5 text-sm font-medium"
             >
               Tutup
             </button>
