@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   FaPlane,
@@ -7,52 +7,64 @@ import {
   FaFacebook,
   FaInstagram,
   FaTiktok,
+  FaSearch,
 } from "react-icons/fa";
 
 export default function LandingPage() {
+  const [search, setSearch] = useState("");
+
   const destinations = [
     {
       name: "Bali",
-      image:
-        "https://images.unsplash.com/photo-1537996194471-e657df975ab4",
+      image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4",
       rating: 4.9,
       location: "Indonesia",
     },
     {
       name: "Tokyo",
-      image:
-        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf",
+      image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf",
       rating: 4.8,
       location: "Japan",
     },
     {
       name: "Paris",
-      image:
-        "https://images.unsplash.com/photo-1502602898657-3e91760cbb34",
+      image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34",
       rating: 4.9,
       location: "France",
     },
     {
       name: "Dubai",
-      image:
-        "https://images.unsplash.com/photo-1512453979798-5ea266f8880c",
+      image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c",
       rating: 4.7,
       location: "UAE",
     },
   ];
 
+  const filteredDestinations = destinations.filter((item) => {
+    const keyword = search.toLowerCase();
+
+    return (
+      item.name.toLowerCase().includes(keyword) ||
+      item.location.toLowerCase().includes(keyword)
+    );
+  });
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+
+    document.getElementById("destination")?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div className="bg-white">
-
       {/* NAVBAR */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-
           <div className="flex items-center gap-2">
             <FaPlane className="text-sky-500 text-2xl" />
-            <h1 className="text-2xl font-bold text-slate-800">
-              TravelGo
-            </h1>
+            <h1 className="text-2xl font-bold text-slate-800">TravelGo</h1>
           </div>
 
           <div className="hidden md:flex gap-8 font-medium text-slate-700">
@@ -77,7 +89,6 @@ export default function LandingPage() {
               Register
             </Link>
           </div>
-
         </div>
       </nav>
 
@@ -92,18 +103,48 @@ export default function LandingPage() {
       >
         <div className="absolute inset-0 bg-black/50"></div>
 
-        <div className="relative z-10 text-center text-white px-4">
+        <div className="relative z-10 text-center text-white px-4 w-full">
           <h1 className="text-6xl md:text-7xl font-bold mb-6">
             Explore The World
           </h1>
 
           <p className="text-xl max-w-2xl mx-auto mb-8">
-            Discover amazing destinations and unforgettable
-            adventures around the globe.
+            Discover amazing destinations and unforgettable adventures around
+            the globe.
           </p>
 
+          {/* SEARCH */}
+          <form
+            onSubmit={handleSearchSubmit}
+            className="max-w-2xl mx-auto mb-8 bg-white rounded-full p-2 flex items-center shadow-xl"
+          >
+            <FaSearch className="text-slate-400 ml-4 mr-3" />
+
+            <input
+              type="text"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search destination or country..."
+              className="flex-1 px-2 py-3 text-slate-800 outline-none rounded-full"
+            />
+
+            <button
+              type="submit"
+              className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded-full font-semibold"
+            >
+              Search
+            </button>
+          </form>
+
           <div className="flex justify-center gap-4">
-            <button className="bg-sky-500 hover:bg-sky-600 px-8 py-4 rounded-full font-semibold">
+            <button
+              onClick={() =>
+                document.getElementById("destination")?.scrollIntoView({
+                  behavior: "smooth",
+                })
+              }
+              className="bg-sky-500 hover:bg-sky-600 px-8 py-4 rounded-full font-semibold"
+            >
               Explore Now
             </button>
 
@@ -120,113 +161,107 @@ export default function LandingPage() {
       {/* STATS */}
       <section className="py-16 bg-slate-50">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-
           <div>
-            <h2 className="text-4xl font-bold text-sky-500">
-              50K+
-            </h2>
+            <h2 className="text-4xl font-bold text-sky-500">50K+</h2>
             <p>Happy Travelers</p>
           </div>
 
           <div>
-            <h2 className="text-4xl font-bold text-sky-500">
-              100+
-            </h2>
+            <h2 className="text-4xl font-bold text-sky-500">100+</h2>
             <p>Destinations</p>
           </div>
 
           <div>
-            <h2 className="text-4xl font-bold text-sky-500">
-              15+
-            </h2>
+            <h2 className="text-4xl font-bold text-sky-500">15+</h2>
             <p>Countries</p>
           </div>
 
           <div>
-            <h2 className="text-4xl font-bold text-sky-500">
-              4.9
-            </h2>
+            <h2 className="text-4xl font-bold text-sky-500">4.9</h2>
             <p>Rating</p>
           </div>
-
         </div>
       </section>
 
       {/* DESTINATION */}
-      <section
-        id="destination"
-        className="py-20 max-w-7xl mx-auto px-6"
-      >
-        <h2 className="text-4xl font-bold text-center mb-12">
+      <section id="destination" className="py-20 max-w-7xl mx-auto px-6">
+        <h2 className="text-4xl font-bold text-center mb-4">
           Popular Destinations
         </h2>
 
-        <div className="grid md:grid-cols-4 gap-8">
-          {destinations.map((item, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-3xl overflow-hidden shadow-lg hover:-translate-y-2 transition"
-            >
-              <img
-                src={item.image}
-                alt={item.name}
-                className="h-60 w-full object-cover"
-              />
+        <p className="text-center text-slate-500 mb-12">
+          {search
+            ? `Search result for "${search}"`
+            : "Find your favorite destination"}
+        </p>
 
-              <div className="p-5">
-                <div className="flex justify-between">
-                  <h3 className="font-bold text-xl">
-                    {item.name}
-                  </h3>
+        {filteredDestinations.length > 0 ? (
+          <div className="grid md:grid-cols-4 gap-8">
+            {filteredDestinations.map((item, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-3xl overflow-hidden shadow-lg hover:-translate-y-2 transition"
+              >
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="h-60 w-full object-cover"
+                />
 
-                  <span className="flex items-center text-yellow-500">
-                    <FaStar />
-                    <span className="ml-1">
-                      {item.rating}
+                <div className="p-5">
+                  <div className="flex justify-between">
+                    <h3 className="font-bold text-xl">{item.name}</h3>
+
+                    <span className="flex items-center text-yellow-500">
+                      <FaStar />
+                      <span className="ml-1">{item.rating}</span>
                     </span>
-                  </span>
+                  </div>
+
+                  <p className="flex items-center gap-2 text-gray-500 mt-2">
+                    <FaMapMarkerAlt />
+                    {item.location}
+                  </p>
+
+                  <button className="w-full mt-5 bg-sky-500 text-white py-3 rounded-xl">
+                    View Details
+                  </button>
                 </div>
-
-                <p className="flex items-center gap-2 text-gray-500 mt-2">
-                  <FaMapMarkerAlt />
-                  {item.location}
-                </p>
-
-                <button className="w-full mt-5 bg-sky-500 text-white py-3 rounded-xl">
-                  View Details
-                </button>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center bg-slate-50 rounded-3xl py-16">
+            <h3 className="text-2xl font-bold text-slate-800">
+              Destination not found
+            </h3>
+            <p className="text-slate-500 mt-2">
+              Try searching with another destination or country.
+            </p>
+          </div>
+        )}
       </section>
 
       {/* REVIEW */}
-      <section
-        id="reviews"
-        className="py-20 bg-slate-50"
-      >
+      <section id="reviews" className="py-20 bg-slate-50">
         <div className="max-w-4xl mx-auto text-center">
-
-          <h2 className="text-4xl font-bold mb-10">
-            Traveler Reviews
-          </h2>
+          <h2 className="text-4xl font-bold mb-10">Traveler Reviews</h2>
 
           <div className="bg-white rounded-3xl p-10 shadow-lg">
-
-            <div className="text-yellow-500 text-2xl mb-4">
-              ⭐⭐⭐⭐⭐
+            <div className="text-yellow-500 text-2xl mb-4 flex justify-center gap-1">
+              <FaStar />
+              <FaStar />
+              <FaStar />
+              <FaStar />
+              <FaStar />
             </div>
 
             <p className="text-xl italic">
-              "The best travel experience ever. Everything
-              was perfectly organized."
+              "The best travel experience ever. Everything was perfectly
+              organized."
             </p>
 
-            <h4 className="mt-5 font-bold">
-              Budi Santoso
-            </h4>
-
+            <h4 className="mt-5 font-bold">Budi Santoso</h4>
           </div>
         </div>
       </section>
@@ -237,9 +272,7 @@ export default function LandingPage() {
           Ready For Your Next Journey?
         </h2>
 
-        <p className="mb-8">
-          Join thousands of travelers today.
-        </p>
+        <p className="mb-8">Join thousands of travelers today.</p>
 
         <Link
           to="/register"
@@ -250,28 +283,15 @@ export default function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer
-        id="footer"
-        className="bg-slate-900 text-white py-16"
-      >
+      <footer id="footer" className="bg-slate-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-10">
-
           <div>
-            <h3 className="text-2xl font-bold mb-3">
-              TravelGo
-            </h3>
-
-            <p>
-              Explore the world with unforgettable
-              experiences.
-            </p>
+            <h3 className="text-2xl font-bold mb-3">TravelGo</h3>
+            <p>Explore the world with unforgettable experiences.</p>
           </div>
 
           <div>
-            <h4 className="font-bold mb-3">
-              Quick Links
-            </h4>
-
+            <h4 className="font-bold mb-3">Quick Links</h4>
             <p>Home</p>
             <p>Destinations</p>
             <p>Reviews</p>
@@ -279,18 +299,13 @@ export default function LandingPage() {
           </div>
 
           <div>
-            <h4 className="font-bold mb-3">
-              Contact
-            </h4>
-
+            <h4 className="font-bold mb-3">Contact</h4>
             <p>travelgo@gmail.com</p>
             <p>+62 812 3456 7890</p>
           </div>
 
           <div>
-            <h4 className="font-bold mb-3">
-              Follow Us
-            </h4>
+            <h4 className="font-bold mb-3">Follow Us</h4>
 
             <div className="flex gap-4 text-2xl">
               <FaFacebook />
@@ -298,14 +313,12 @@ export default function LandingPage() {
               <FaTiktok />
             </div>
           </div>
-
         </div>
 
         <div className="text-center mt-10 border-t border-slate-700 pt-5">
           © 2026 TravelGo. All Rights Reserved.
         </div>
       </footer>
-
     </div>
   );
 }
