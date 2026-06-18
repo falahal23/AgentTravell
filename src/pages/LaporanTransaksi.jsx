@@ -31,7 +31,7 @@ export default function LaporanTransaksi() {
             </PageHeader>
 
             {/* Stats Summary Area */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="!hidden grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white/5 border border-white/10 p-6 rounded-[2rem] backdrop-blur-md">
                     <div className="flex justify-between items-center mb-4">
                         <div className="p-3 bg-blue-500/20 rounded-2xl text-blue-400"><FaWallet /></div>

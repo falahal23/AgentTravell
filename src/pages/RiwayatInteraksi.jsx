@@ -109,7 +109,7 @@ export default function RiwayatInteraksi() {
     <div className="min-h-screen bg-[#EAF2FF] p-6">
       {/* HEADER */}
       <div className="flex flex-wrap justify-between items-start gap-4 mb-5">
-        <div>
+        <div className="!hidden">
           <h1 className="text-2xl font-semibold">Riwayat Interaksi</h1>
           <p className="text-gray-400 text-sm">
             Monitoring komunikasi pelanggan
@@ -127,7 +127,7 @@ export default function RiwayatInteraksi() {
       </div>
 
       {/* STATS */}
-      <div className="grid grid-cols-3 gap-3 mb-5">
+      <div className="!hidden grid-cols-3 gap-3 mb-5">
         {[
           { label: "Total Interaksi", value: filtered.length, color: "" },
           {

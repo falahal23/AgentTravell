@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { 
   FaChevronLeft, 
   FaChevronRight, 
@@ -15,6 +15,7 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 
 export default function RightPanel() {
+  const [selectedDate, setSelectedDate] = useState(16);
   const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const dates = [
     { day: 27, current: false }, { day: 28, current: false }, { day: 29, current: false }, { day: 30, current: false }, { day: 1, current: true }, { day: 2, current: true }, { day: 3, current: true },
@@ -23,6 +24,40 @@ export default function RightPanel() {
     { day: 18, current: true }, { day: 19, current: true }, { day: 20, current: true }, { day: 21, current: true }, { day: 22, current: true }, { day: 23, current: true }, { day: 24, current: true },
     { day: 25, current: true }, { day: 26, current: true }, { day: 27, current: true }, { day: 28, current: true }, { day: 29, current: true }, { day: 30, current: true }, { day: 31, current: true }
   ];
+  const trips = [
+    {
+      title: "Shunderban, Khulna",
+      startDay: 16,
+      endDay: 19,
+      date: "16 - 19 Apr 2025",
+      quota: "8",
+      img: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=100",
+    },
+    {
+      title: "Srimongol, Sylhet",
+      startDay: 16,
+      endDay: 19,
+      date: "16 - 19 Apr 2025",
+      quota: "8",
+      img: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=100",
+    },
+    {
+      title: "Jaflong, Sylhet",
+      startDay: 16,
+      endDay: 19,
+      date: "16 - 19 Apr 2025",
+      quota: "8",
+      img: "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=100",
+    },
+  ];
+
+  const filteredTrips =
+    selectedDate === null
+      ? trips
+      : trips.filter(
+          (trip) =>
+            selectedDate >= trip.startDay && selectedDate <= trip.endDay,
+        );
 
   return (
     <div className="w-full max-w-xs space-y-5 p-1 text-slate-800">
@@ -40,42 +75,68 @@ export default function RightPanel() {
             <span key={day} className="text-[9px] font-bold text-white/40">{day}</span>
           ))}
           {dates.map((item, idx) => {
-            // Menyesuaikan highlight range tanggal 16 - 19 seperti di gambar
-            const isRangeStart = item.day === 16 && idx === 19;
-            const isInRange = item.day >= 17 && item.day <= 18 && idx > 19;
-            const isRangeEnd = item.day === 19 && idx === 22;
+            const isSelected = item.current && item.day === selectedDate;
 
             return (
-              <div key={idx} className="relative flex items-center justify-center py-0.5">
-                {/* Background connector strip untuk range tanggal */}
-                {isInRange && <div className="absolute inset-0 bg-white/10" />}
-                {isRangeStart && <div className="absolute right-0 w-1/2 h-full bg-white/10 rounded-l-full" />}
-                {isRangeEnd && <div className="absolute left-0 w-1/2 h-full bg-white/10 rounded-r-full" />}
-
-                <span className={`text-[10px] font-bold w-6 h-6 flex items-center justify-center rounded-full transition-all
-                  ${isRangeStart || isRangeEnd ? "bg-white text-[#0A257F] shadow-md" : ""}
-                  ${isInRange ? "text-white" : ""}
-                  ${!item.current ? "text-white/20" : (!isRangeStart && !isRangeEnd && !isInRange ? "text-white/80" : "")}
+              <button
+                key={idx}
+                type="button"
+                disabled={!item.current}
+                onClick={() => setSelectedDate(item.day)}
+                aria-label={`Pilih tanggal ${item.day} April 2025`}
+                aria-pressed={isSelected}
+                className="relative flex items-center justify-center py-0.5 disabled:cursor-default"
+              >
+                <span className={`relative z-10 text-[10px] font-bold w-6 h-6 flex items-center justify-center rounded-full transition-all hover:bg-white/20
+                  ${isSelected ? "bg-amber-300 text-[#0A257F] shadow-[0_0_0_3px_rgba(255,255,255,0.18)]" : ""}
+                  ${!item.current ? "text-white/20" : (!isSelected ? "text-white/80" : "")}
                 `}>
                   {item.day}
                 </span>
-              </div>
+              </button>
             );
           })}
         </div>
+        <p className="mt-3 text-center text-[9px] font-semibold text-white/55">
+          {selectedDate === null
+            ? "Menampilkan semua jadwal"
+            : `Jadwal tanggal ${selectedDate} April 2025`}
+        </p>
       </div>
 
       {/* 2. UPCOMING TRIPS */}
       <div className="bg-white rounded-[2.5rem] p-5 shadow-sm border border-slate-100">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-sm font-bold text-slate-900 tracking-tight">Upcoming Trips</h2>
-          <button className="text-blue-600 font-bold text-[10px] hover:underline">View All</button>
+          <button
+            type="button"
+            onClick={() => setSelectedDate(null)}
+            className="text-blue-600 font-bold text-[10px] hover:underline"
+          >
+            View All
+          </button>
         </div>
 
         <div className="space-y-3">
-          <TripItem title="Shunderban, Khulna" date="16 - 19 Apr 2025" quota="8" img="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=100" />
-          <TripItem title="Srimongol, Sylhet" date="16 - 19 Apr 2025" quota="8" img="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=100" />
-          <TripItem title="Jaflong, Sylhet" date="16 - 19 Apr 2025" quota="8" img="https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=100" />
+          {filteredTrips.length > 0 ? (
+            filteredTrips.map((trip) => (
+              <TripItem key={trip.title} {...trip} />
+            ))
+          ) : (
+            <div className="rounded-2xl bg-slate-50 px-4 py-6 text-center">
+              <FaRegCalendarAlt className="mx-auto mb-2 text-slate-300" />
+              <p className="text-[10px] font-bold text-slate-500">
+                Tidak ada trip pada tanggal ini
+              </p>
+              <button
+                type="button"
+                onClick={() => setSelectedDate(null)}
+                className="mt-2 text-[9px] font-bold text-blue-600 hover:underline"
+              >
+                Lihat semua trip
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

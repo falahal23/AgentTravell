@@ -8,6 +8,8 @@ import AuthLayout from "./layouts/AuthLayout";
 // PAGES
 const LandingPage = React.lazy(() => import("./pages/LandingPage"));
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+const Wisata = React.lazy(() => import("./pages/Wisata"));
+const KelolaBooking = React.lazy(() => import("./pages/KelolaBooking"));
 const Orders = React.lazy(() => import("./pages/Orders"));
 const Customers = React.lazy(() => import("./pages/Customers"));
 const DataKontak = React.lazy(() => import("./pages/DataKontak"));
@@ -59,6 +61,9 @@ function App() {
         {/* ADMIN */}
         <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/paket-wisata" element={<Wisata />} />
+          <Route path="/kelola-booking" element={<KelolaBooking />} />
+          <Route path="/orders" element={<Orders />} />
 
           <Route path="/data-kontak" element={<DataKontak />} />
           <Route path="/riwayat-interaksi" element={<RiwayatInteraksi />} />

@@ -6,7 +6,7 @@ function Product() {
     <div className="min-h-screen bg-gradient-to-br from-cyan-100 via-white to-blue-100 p-8">
 
       {/* HEADER */}
-      <div className="text-center mb-12">
+      <div className="!hidden text-center mb-12">
 
         <h1 className="text-5xl font-extrabold text-gray-800">
           Travel Agent Products

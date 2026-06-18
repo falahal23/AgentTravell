@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import transaksiData from "../Data/DataTransaksi.json";
-import { FaEye, FaTrash, FaSearch, FaMoneyBill, FaCreditCard, FaCalendarAlt } from "react-icons/fa";
+import { FaEye, FaTrash, FaSearch, FaMoneyBill, FaCreditCard, FaCalendarAlt, FaFilter, FaUndo } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,6 +31,11 @@ export default function DataTransaksi() {
   const [data, setData] = useState(transaksiData);
   const [search, setSearch] = useState("");
   const [deleteData, setDeleteData] = useState(null);
+  const [paymentFilter, setPaymentFilter] = useState("Semua");
+  const [productFilter, setProductFilter] = useState("Semua");
+  const [yearFilter, setYearFilter] = useState("Semua");
+  const [amountFilter, setAmountFilter] = useState("Semua");
+  const [sortBy, setSortBy] = useState("terbaru");
 
   const hapusData = () => {
     setData(
@@ -39,12 +44,43 @@ export default function DataTransaksi() {
     setDeleteData(null);
   };
 
-  const filterData = data.filter(
-    (item) =>
-      item.id_customer?.toLowerCase().includes(search.toLowerCase()) ||
-      item.id_transaksi?.toLowerCase().includes(search.toLowerCase()) ||
-      item.produk_dibeli?.toLowerCase().includes(search.toLowerCase()),
-  );
+  const paymentOptions = ["Semua", ...new Set(data.map((item) => item.metode_pembayaran))];
+  const productOptions = ["Semua", ...new Set(data.map((item) => item.produk_dibeli))];
+  const yearOptions = ["Semua", ...new Set(data.map((item) => item.tanggal_transaksi.slice(0, 4)))];
+
+  const filterData = data
+    .filter((item) => {
+      const keyword = search.toLowerCase();
+      const matchesSearch =
+        item.id_customer?.toLowerCase().includes(keyword) ||
+        item.id_transaksi?.toLowerCase().includes(keyword) ||
+        item.produk_dibeli?.toLowerCase().includes(keyword);
+      const matchesPayment = paymentFilter === "Semua" || item.metode_pembayaran === paymentFilter;
+      const matchesProduct = productFilter === "Semua" || item.produk_dibeli === productFilter;
+      const matchesYear = yearFilter === "Semua" || item.tanggal_transaksi.startsWith(yearFilter);
+      const matchesAmount =
+        amountFilter === "Semua" ||
+        (amountFilter === "rendah" && item.total_transaksi < 1000000) ||
+        (amountFilter === "menengah" && item.total_transaksi >= 1000000 && item.total_transaksi <= 5000000) ||
+        (amountFilter === "tinggi" && item.total_transaksi > 5000000);
+      return matchesSearch && matchesPayment && matchesProduct && matchesYear && matchesAmount;
+    })
+    .sort((a, b) => {
+      if (sortBy === "terlama") return new Date(a.tanggal_transaksi) - new Date(b.tanggal_transaksi);
+      if (sortBy === "nominal-tinggi") return b.total_transaksi - a.total_transaksi;
+      if (sortBy === "nominal-rendah") return a.total_transaksi - b.total_transaksi;
+      return new Date(b.tanggal_transaksi) - new Date(a.tanggal_transaksi);
+    });
+
+  const hasActiveFilter = search || paymentFilter !== "Semua" || productFilter !== "Semua" || yearFilter !== "Semua" || amountFilter !== "Semua" || sortBy !== "terbaru";
+  const resetFilters = () => {
+    setSearch("");
+    setPaymentFilter("Semua");
+    setProductFilter("Semua");
+    setYearFilter("Semua");
+    setAmountFilter("Semua");
+    setSortBy("terbaru");
+  };
 
   const formatRupiah = (angka) => {
     return new Intl.NumberFormat("id-ID", {
@@ -66,7 +102,7 @@ export default function DataTransaksi() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6 space-y-6">
       {/* HEADER BANNER */}
-      <Alert className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 shadow-lg rounded-xl p-5 flex items-center gap-4">
+      <Alert className="!hidden bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 shadow-lg rounded-xl p-5 items-center gap-4">
         <div className="p-3 bg-white/10 rounded-lg backdrop-blur-sm">
           <FaMoneyBill className="w-6 h-6 text-blue-200" />
         </div>
@@ -82,7 +118,7 @@ export default function DataTransaksi() {
       </Alert>
 
       {/* STATISTICS CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="!hidden grid-cols-1 md:grid-cols-3 gap-5">
         <Card className="shadow-sm border border-slate-100 bg-white rounded-xl hover:shadow-md transition-shadow">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
@@ -129,18 +165,35 @@ export default function DataTransaksi() {
       </div>
 
       {/* SEARCH CARD */}
-      <Card className="shadow-sm border border-slate-100 bg-white rounded-xl">
-        <CardContent className="p-5">
-          <h3 className="text-lg font-bold text-slate-800 mb-4">Riwayat Transaksi Customer</h3>
-          <div className="relative max-w-md">
-            <FaSearch className="absolute left-3.5 top-3 text-slate-400 w-4 h-4" />
+      <Card className="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-[0_12px_35px_rgba(30,64,175,0.08)]">
+        <div className="flex flex-col gap-3 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200"><FaFilter /></span>
+            <div>
+              <h3 className="font-bold text-slate-900">Filter Transaksi</h3>
+              <p className="text-xs text-slate-500">Menampilkan {filterData.length} dari {data.length} transaksi</p>
+            </div>
+          </div>
+          {hasActiveFilter && <button type="button" onClick={resetFilters} className="inline-flex items-center justify-center gap-2 rounded-xl border border-blue-200 bg-white px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-600 hover:text-white"><FaUndo /> Reset Filter</button>}
+        </div>
+        <CardContent className="grid grid-cols-1 gap-4 p-5 md:grid-cols-2 xl:grid-cols-3">
+          <label className="space-y-1.5 xl:col-span-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Pencarian</span>
+            <div className="relative">
+              <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <Input
               placeholder="Cari ID customer, transaksi, atau produk..."
-              className="pl-10 border-slate-200 focus:border-blue-500 focus:ring-blue-500 rounded-lg h-10"
+                className="h-11 rounded-xl border-slate-200 bg-slate-50 pl-10 focus:bg-white"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-          </div>
+            </div>
+          </label>
+          <FilterSelect label="Metode Pembayaran" value={paymentFilter} onChange={setPaymentFilter} options={paymentOptions} />
+          <FilterSelect label="Produk" value={productFilter} onChange={setProductFilter} options={productOptions} />
+          <FilterSelect label="Tahun" value={yearFilter} onChange={setYearFilter} options={yearOptions} />
+          <FilterSelect label="Rentang Nominal" value={amountFilter} onChange={setAmountFilter} options={[{ value: "Semua", label: "Semua nominal" }, { value: "rendah", label: "< Rp1 juta" }, { value: "menengah", label: "Rp1–5 juta" }, { value: "tinggi", label: "> Rp5 juta" }]} />
+          <FilterSelect label="Urutkan" value={sortBy} onChange={setSortBy} options={[{ value: "terbaru", label: "Tanggal terbaru" }, { value: "terlama", label: "Tanggal terlama" }, { value: "nominal-tinggi", label: "Nominal tertinggi" }, { value: "nominal-rendah", label: "Nominal terendah" }]} />
         </CardContent>
       </Card>
 
@@ -249,5 +302,19 @@ export default function DataTransaksi() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
+  );
+}
+
+function FilterSelect({ label, value, onChange, options }) {
+  return (
+    <label className="space-y-1.5">
+      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">{label}</span>
+      <select value={value} onChange={(event) => onChange(event.target.value)} className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-medium text-slate-700 outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100">
+        {options.map((option) => {
+          const item = typeof option === "string" ? { value: option, label: option } : option;
+          return <option key={item.value} value={item.value}>{item.label}</option>;
+        })}
+      </select>
+    </label>
   );
 }

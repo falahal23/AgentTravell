@@ -157,7 +157,7 @@ useEffect(() => {
     <div className="min-h-screen bg-[#EAF2FF] p-6 space-y-6">
       {/* ALERT INFO */}
 
-      <Alert className="bg-white">
+      <Alert className="!hidden bg-white">
         <FaUsers />
 
         <AlertTitle>Membership Customer</AlertTitle>

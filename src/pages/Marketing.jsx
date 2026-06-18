@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import marketingData from "../Data/Marketing.json";
-import { FaEye, FaTrash, FaSearch, FaFire, FaChartBar, FaUsers } from "react-icons/fa";
+import { FaEye, FaTrash, FaSearch, FaFire, FaChartBar, FaUsers, FaFilter, FaUndo } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,20 +31,41 @@ export default function Marketing() {
   const [data, setData] = useState(marketingData);
   const [search, setSearch] = useState("");
   const [deleteData, setDeleteData] = useState(null);
+  const [sourceFilter, setSourceFilter] = useState("Semua");
+  const [promoFilter, setPromoFilter] = useState("Semua");
+  const [sortBy, setSortBy] = useState("id-asc");
 
   const hapusData = () => {
     setData(data.filter((item) => item.id_customer !== deleteData.id_customer));
     setDeleteData(null);
   };
 
-  const filterData = data.filter((item) => {
-    const keyword = search.toLowerCase();
-    return (
-      item.id_customer?.toLowerCase().includes(keyword) ||
-      item.sumber_user?.toLowerCase().includes(keyword) ||
-      item.status_promo?.toLowerCase().includes(keyword)
-    );
-  });
+  const sourceOptions = ["Semua", ...new Set(data.map((item) => item.sumber_user))];
+  const promoOptions = ["Semua", ...new Set(data.map((item) => item.status_promo))];
+  const filterData = data
+    .filter((item) => {
+      const keyword = search.toLowerCase();
+      const matchesSearch =
+        item.id_customer?.toLowerCase().includes(keyword) ||
+        item.sumber_user?.toLowerCase().includes(keyword) ||
+        item.status_promo?.toLowerCase().includes(keyword);
+      const matchesSource = sourceFilter === "Semua" || item.sumber_user === sourceFilter;
+      const matchesPromo = promoFilter === "Semua" || item.status_promo === promoFilter;
+      return matchesSearch && matchesSource && matchesPromo;
+    })
+    .sort((a, b) => {
+      if (sortBy === "id-desc") return b.id_customer.localeCompare(a.id_customer);
+      if (sortBy === "source") return a.sumber_user.localeCompare(b.sumber_user);
+      if (sortBy === "promo") return a.status_promo.localeCompare(b.status_promo);
+      return a.id_customer.localeCompare(b.id_customer);
+    });
+  const hasActiveFilter = search || sourceFilter !== "Semua" || promoFilter !== "Semua" || sortBy !== "id-asc";
+  const resetFilters = () => {
+    setSearch("");
+    setSourceFilter("Semua");
+    setPromoFilter("Semua");
+    setSortBy("id-asc");
+  };
 
   const getSourceBadgeStyle = (sumber) => {
     switch(sumber) {
@@ -82,7 +103,7 @@ export default function Marketing() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6 space-y-6">
       {/* HEADER BANNER */}
-      <Alert className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 shadow-lg rounded-xl p-5 flex items-center gap-4">
+      <Alert className="!hidden bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 shadow-lg rounded-xl p-5 items-center gap-4">
         <div className="p-3 bg-white/10 rounded-lg backdrop-blur-sm">
           <FaFire className="w-6 h-6 text-blue-200" />
         </div>
@@ -98,7 +119,7 @@ export default function Marketing() {
       </Alert>
 
       {/* STATISTICS CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="!hidden grid-cols-1 md:grid-cols-3 gap-5">
         <Card className="shadow-sm border border-slate-100 bg-white rounded-xl hover:shadow-md transition-shadow">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
@@ -145,18 +166,33 @@ export default function Marketing() {
       </div>
 
       {/* SEARCH CARD */}
-      <Card className="shadow-sm border border-slate-100 bg-white rounded-xl">
-        <CardContent className="p-5">
-          <h3 className="text-lg font-bold text-slate-800 mb-4">Data Marketing & Engagement</h3>
-          <div className="relative max-w-md">
-            <FaSearch className="absolute left-3.5 top-3 text-slate-400 w-4 h-4" />
+      <Card className="overflow-hidden rounded-2xl border border-violet-100 bg-white shadow-[0_12px_35px_rgba(109,40,217,0.08)]">
+        <div className="flex flex-col gap-3 border-b border-slate-100 bg-gradient-to-r from-violet-50 via-fuchsia-50 to-pink-50 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-600 text-white shadow-lg shadow-violet-200"><FaFilter /></span>
+            <div>
+              <h3 className="font-bold text-slate-900">Filter Marketing</h3>
+              <p className="text-xs text-slate-500">Menampilkan {filterData.length} dari {data.length} customer</p>
+            </div>
+          </div>
+          {hasActiveFilter && <button type="button" onClick={resetFilters} className="inline-flex items-center justify-center gap-2 rounded-xl border border-violet-200 bg-white px-3 py-2 text-xs font-bold text-violet-700 hover:bg-violet-600 hover:text-white"><FaUndo /> Reset Filter</button>}
+        </div>
+        <CardContent className="grid grid-cols-1 gap-4 p-5 md:grid-cols-2 xl:grid-cols-4">
+          <label className="space-y-1.5 xl:col-span-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Pencarian</span>
+            <div className="relative">
+              <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <Input
               placeholder="Cari ID customer, sumber, atau status promo..."
-              className="pl-10 border-slate-200 focus:border-blue-500 focus:ring-blue-500 rounded-lg h-10"
+                className="h-11 rounded-xl border-slate-200 bg-slate-50 pl-10 focus:bg-white"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-          </div>
+            </div>
+          </label>
+          <MarketingSelect label="Sumber User" value={sourceFilter} onChange={setSourceFilter} options={sourceOptions} />
+          <MarketingSelect label="Status Promo" value={promoFilter} onChange={setPromoFilter} options={promoOptions} />
+          <MarketingSelect label="Urutkan Data" value={sortBy} onChange={setSortBy} options={[{ value: "id-asc", label: "ID terkecil" }, { value: "id-desc", label: "ID terbesar" }, { value: "source", label: "Nama sumber" }, { value: "promo", label: "Status promo" }]} />
         </CardContent>
       </Card>
 
@@ -256,5 +292,19 @@ export default function Marketing() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
+  );
+}
+
+function MarketingSelect({ label, value, onChange, options }) {
+  return (
+    <label className="space-y-1.5">
+      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">{label}</span>
+      <select value={value} onChange={(event) => onChange(event.target.value)} className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-medium text-slate-700 outline-none focus:border-violet-500 focus:bg-white focus:ring-4 focus:ring-violet-100">
+        {options.map((option) => {
+          const item = typeof option === "string" ? { value: option, label: option } : option;
+          return <option key={item.value} value={item.value}>{item.label}</option>;
+        })}
+      </select>
+    </label>
   );
 }

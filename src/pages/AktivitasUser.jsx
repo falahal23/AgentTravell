@@ -80,7 +80,7 @@ export default function AktivitasUser() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6 space-y-6">
       {/* HEADER BANNER */}
-      <Alert className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 shadow-lg rounded-xl p-5 flex items-center gap-4">
+      <Alert className="!hidden bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 shadow-lg rounded-xl p-5 items-center gap-4">
         <div className="p-3 bg-white/10 rounded-lg backdrop-blur-sm">
           <FaClock className="w-6 h-6 text-blue-200" />
         </div>
@@ -96,7 +96,7 @@ export default function AktivitasUser() {
       </Alert>
 
       {/* STATISTICS CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="!hidden grid-cols-1 md:grid-cols-3 gap-5">
         <Card className="shadow-sm border border-slate-100 bg-white rounded-xl hover:shadow-md transition-shadow">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">

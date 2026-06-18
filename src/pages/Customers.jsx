@@ -70,7 +70,7 @@ export default function Customers() {
       </PageHeader>
 
       {/* STATISTICS */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="!hidden grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total Customer", value: customers.length, color: "text-blue-900" },
           { label: "Gold Member",    value: getLoyaltyCount("Gold"),   color: "text-yellow-600" },

@@ -54,7 +54,7 @@ export default function Login() {
         JSON.stringify(data.session)
       );
 
-      navigate("/");
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message || "Login gagal");
     } finally {

@@ -83,7 +83,7 @@ export default function DataKontak() {
   return (
     <div className="p-6 bg-slate-50/50 min-h-screen space-y-6 font-sans">
       {/* HEADER BANNER / ALERT */}
-      <Alert className="bg-gradient-to-r from-blue-700 to-sky-600 text-white border-0 shadow-lg rounded-xl p-5 flex items-center gap-4">
+      <Alert className="!hidden bg-gradient-to-r from-blue-700 to-sky-600 text-white border-0 shadow-lg rounded-xl p-5 items-center gap-4">
         <div className="p-3 bg-white/10 rounded-lg backdrop-blur-sm">
           <FaUsers className="w-6 h-6 text-sky-200" />
         </div>
@@ -100,7 +100,7 @@ export default function DataKontak() {
       </Alert>
 
       {/* STATISTIC CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="!hidden grid-cols-1 md:grid-cols-3 gap-5">
         <Card className="shadow-sm border border-slate-100 bg-white rounded-xl hover:shadow-md transition-shadow">
           <CardContent className="p-5 flex items-center justify-between">
             <div>
