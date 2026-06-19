@@ -1,13 +1,56 @@
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaReceipt, FaUser, FaCreditCard, FaMoneyBill, FaBoxOpen, FaCalendarAlt, FaCheckCircle } from "react-icons/fa";
-import transaksiData from "../Data/DataTransaksi.json";
+import { supabase } from "../lib/supabase";
 
 export default function DetailTransaksi() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const detail = transaksiData.find((item) => item.id_transaksi === id);
+  const [detail, setDetail] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  if (!detail) {
+  useEffect(() => {
+    const fetchDetail = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const { data, error: err } = await supabase
+          .from("transaksi")
+          .select("*")
+          .eq("id_transaksi", id)
+          .single();
+        if (err) throw err;
+
+        if (data) {
+          setDetail({
+            id_transaksi: String(data.id_transaksi),
+            id_customer: data.id_customer,
+            total_transaksi: Number(data.total_transaksi),
+            metode_pembayaran: data.metode_pembayaran,
+            produk_dibeli: data.paket_dibeli || "-",
+            tanggal_transaksi: data.tanggal_transaksi || "",
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        setError(err.message || "Gagal memuat detail transaksi");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDetail();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (error || !detail) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 space-y-4">
         <div className="p-6 bg-white rounded-2xl shadow-xl text-center">

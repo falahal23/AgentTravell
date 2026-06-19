@@ -1,28 +1,36 @@
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaUser, FaClock, FaCalendarAlt, FaCheckCircle } from "react-icons/fa";
-import aktivitasData from "../Data/AktivitasUser.json";
+import { supabase } from "../lib/supabase";
 
 export default function DetailAktivitas() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const detail = aktivitasData.find((item) => item.id_customer === id);
+  const [detail, setDetail] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  if (!detail) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 space-y-4">
-        <div className="p-6 bg-white rounded-2xl shadow-xl text-center">
-          <h2 className="text-3xl font-bold text-slate-400 mb-2">Data Aktivitas Tidak Ditemukan</h2>
-          <p className="text-slate-500 mb-4">ID: {id}</p>
-          <button 
-            onClick={() => navigate(-1)} 
-            className="inline-flex items-center gap-2 px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl"
-          >
-            <FaArrowLeft /> Kembali ke Aktivitas User
-          </button>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const fetchDetail = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const { data, error: err } = await supabase
+          .from("aktivitas")
+          .select("*")
+          .eq("id_customer", id)
+          .single();
+        if (err) throw err;
+        setDetail(data);
+      } catch (err) {
+        console.error(err);
+        setError(err.message || "Gagal memuat detail aktivitas");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDetail();
+  }, [id]);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "-";
@@ -40,6 +48,7 @@ export default function DetailAktivitas() {
   };
 
   const getStatusInfo = (loginTime) => {
+    if (!loginTime) return { status: "🔴 Tidak Aktif", color: "from-orange-600 to-orange-700", badge: "bg-orange-50 text-orange-600 border-orange-200" };
     const loginDate = new Date(loginTime);
     const now = new Date();
     const daysDiff = (now - loginDate) / (1000 * 60 * 60 * 24);
@@ -52,6 +61,31 @@ export default function DetailAktivitas() {
       return { status: "🔴 Tidak Aktif", color: "from-orange-600 to-orange-700", badge: "bg-orange-50 text-orange-600 border-orange-200" };
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (error || !detail) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 space-y-4">
+        <div className="p-6 bg-white rounded-2xl shadow-xl text-center">
+          <h2 className="text-3xl font-bold text-slate-400 mb-2">Data Aktivitas Tidak Ditemukan</h2>
+          <p className="text-slate-500 mb-4">ID: {id}</p>
+          <button 
+            onClick={() => navigate(-1)} 
+            className="inline-flex items-center gap-2 px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl"
+          >
+            <FaArrowLeft /> Kembali ke Aktivitas User
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const statusInfo = getStatusInfo(detail.login_terakhir);
 

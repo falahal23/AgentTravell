@@ -1,25 +1,76 @@
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   FaArrowLeft, FaEnvelope, FaPhone, FaCrown,
   FaCalendarAlt, FaShoppingBag, FaIdCard,
   FaCheckCircle, FaTimesCircle, FaTag
 } from "react-icons/fa";
-import customersData from "../Data/customers.json";
-import membershipData from "../Data/Membership.json";
+import { supabase } from "../lib/supabase";
 
 export default function DetailCustomer() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [customer, setCustomer] = useState(null);
+  const [membership, setMembership] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const customer = customersData.find((c) => c.customerId === id);
+  useEffect(() => {
+    const fetchDetail = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const { data, error: err } = await supabase
+          .from("customers")
+          .select(`
+            id_customer,
+            nama_lengkap,
+            username,
+            jenis_kelamin,
+            tanggal_lahir,
+            kontak (no_hp, email, alamat, kota, provinsi),
+            membership (level_membership, status_member, tanggal_daftar, referral_code, status_aktif)
+          `)
+          .eq("id_customer", id)
+          .single();
+        if (err) throw err;
 
-  // Cocokkan membership berdasarkan id_customer
-  const membership = membershipData.find((m) => m.id_customer === id);
+        if (data) {
+          setCustomer({
+            customerId: data.id_customer,
+            customerName: data.nama_lengkap || data.username || "-",
+            email: data.kontak?.[0]?.email || "-",
+            phone: data.kontak?.[0]?.no_hp || "-",
+            loyalty: data.membership?.[0]?.level_membership || "Bronze"
+          });
+          if (data.membership && data.membership.length > 0) {
+            setMembership(data.membership[0]);
+          } else {
+            setMembership(null);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        setError(err.message || "Gagal memuat detail customer");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDetail();
+  }, [id]);
 
-  if (!customer) {
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0d9488]"></div>
+      </div>
+    );
+  }
+
+  if (error || !customer) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-        <h2 className="text-2xl font-bold text-slate-400">Customer Not Found</h2>
+        <h2 className="text-2xl font-bold text-slate-400">{error || "Customer Not Found"}</h2>
         <button onClick={() => navigate(-1)} className="text-[#0d9488] font-bold">
           Back to List
         </button>

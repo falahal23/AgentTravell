@@ -15,41 +15,108 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 
 export default function RightPanel() {
+  const [currentYear, setCurrentYear] = useState(2025);
+  const [currentMonth, setCurrentMonth] = useState(3); // April (0-indexed: 3 = April)
   const [selectedDate, setSelectedDate] = useState(16);
+
   const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-  const dates = [
-    { day: 27, current: false }, { day: 28, current: false }, { day: 29, current: false }, { day: 30, current: false }, { day: 1, current: true }, { day: 2, current: true }, { day: 3, current: true },
-    { day: 4, current: true }, { day: 5, current: true }, { day: 6, current: true }, { day: 7, current: true }, { day: 8, current: true }, { day: 9, current: true }, { day: 10, current: true },
-    { day: 11, current: true }, { day: 12, current: true }, { day: 13, current: true }, { day: 14, current: true }, { day: 15, current: true }, { day: 16, current: true }, { day: 17, current: true },
-    { day: 18, current: true }, { day: 19, current: true }, { day: 20, current: true }, { day: 21, current: true }, { day: 22, current: true }, { day: 23, current: true }, { day: 24, current: true },
-    { day: 25, current: true }, { day: 26, current: true }, { day: 27, current: true }, { day: 28, current: true }, { day: 29, current: true }, { day: 30, current: true }, { day: 31, current: true }
+  const monthLongNames = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
   ];
+  const monthNames = [
+    "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", 
+    "Jul", "Agu", "Sep", "Okt", "Nov", "Des"
+  ];
+
+  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+
+  const dates = [];
+  // Prev month padding
+  for (let i = firstDayOfMonth - 1; i >= 0; i--) {
+    dates.push({ day: daysInPrevMonth - i, current: false });
+  }
+  // Current month days
+  for (let i = 1; i <= daysInMonth; i++) {
+    dates.push({ day: i, current: true });
+  }
+  // Next month padding to fill 42 cells grid
+  const nextMonthDaysNeeded = 42 - dates.length;
+  for (let i = 1; i <= nextMonthDaysNeeded; i++) {
+    dates.push({ day: i, current: false });
+  }
+
+  const handlePrevMonth = () => {
+    setSelectedDate(null);
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear(prev => prev - 1);
+    } else {
+      setCurrentMonth(prev => prev - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    setSelectedDate(null);
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear(prev => prev + 1);
+    } else {
+      setCurrentMonth(prev => prev + 1);
+    }
+  };
+
+  // 6 premium travel packages spread across different dates of any month
   const trips = [
     {
-      title: "Shunderban, Khulna",
-      startDay: 16,
-      endDay: 19,
-      date: "16 - 19 Apr 2025",
+      title: "Raja Ampat, Papua",
+      startDay: 1,
+      endDay: 5,
       quota: "8",
       img: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=100",
     },
     {
-      title: "Srimongol, Sylhet",
-      startDay: 16,
-      endDay: 19,
-      date: "16 - 19 Apr 2025",
-      quota: "8",
+      title: "Labuan Bajo, NTT",
+      startDay: 6,
+      endDay: 10,
+      quota: "12",
       img: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=100",
     },
     {
-      title: "Jaflong, Sylhet",
-      startDay: 16,
-      endDay: 19,
-      date: "16 - 19 Apr 2025",
-      quota: "8",
+      title: "Ubud, Bali",
+      startDay: 11,
+      endDay: 15,
+      quota: "6",
       img: "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=100",
     },
+    {
+      title: "Gunung Bromo, Jatim",
+      startDay: 16,
+      endDay: 20,
+      quota: "10",
+      img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=100",
+    },
+    {
+      title: "Candi Borobudur, Jateng",
+      startDay: 21,
+      endDay: 25,
+      quota: "15",
+      img: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=100",
+    },
+    {
+      title: "Danau Toba, Sumut",
+      startDay: 26,
+      endDay: 30,
+      quota: "9",
+      img: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=100",
+    }
   ];
+
+  const getTripDateString = (trip) => {
+    return `${trip.startDay} - ${trip.endDay} ${monthNames[currentMonth]} ${currentYear}`;
+  };
 
   const filteredTrips =
     selectedDate === null
@@ -65,9 +132,25 @@ export default function RightPanel() {
       {/* 1. DARK BLUE CALENDAR */}
       <div className="bg-[#0A257F] text-white rounded-[2.5rem] p-5 shadow-md">
         <div className="flex items-center justify-between mb-4 px-1">
-          <button className="text-white/60 hover:text-white transition-colors"><FaChevronLeft size={10} /></button>
-          <h3 className="font-bold text-xs uppercase tracking-widest">April 2025</h3>
-          <button className="text-white/60 hover:text-white transition-colors"><FaChevronRight size={10} /></button>
+          <button 
+            type="button" 
+            onClick={handlePrevMonth}
+            className="text-white/60 hover:text-white transition-colors"
+            aria-label="Bulan sebelumnya"
+          >
+            <FaChevronLeft size={10} />
+          </button>
+          <h3 className="font-bold text-xs uppercase tracking-widest">
+            {monthLongNames[currentMonth]} {currentYear}
+          </h3>
+          <button 
+            type="button" 
+            onClick={handleNextMonth}
+            className="text-white/60 hover:text-white transition-colors"
+            aria-label="Bulan berikutnya"
+          >
+            <FaChevronRight size={10} />
+          </button>
         </div>
 
         <div className="grid grid-cols-7 gap-y-3 text-center">
@@ -83,7 +166,7 @@ export default function RightPanel() {
                 type="button"
                 disabled={!item.current}
                 onClick={() => setSelectedDate(item.day)}
-                aria-label={`Pilih tanggal ${item.day} April 2025`}
+                aria-label={`Pilih tanggal ${item.day} ${monthLongNames[currentMonth]} ${currentYear}`}
                 aria-pressed={isSelected}
                 className="relative flex items-center justify-center py-0.5 disabled:cursor-default"
               >
@@ -100,7 +183,7 @@ export default function RightPanel() {
         <p className="mt-3 text-center text-[9px] font-semibold text-white/55">
           {selectedDate === null
             ? "Menampilkan semua jadwal"
-            : `Jadwal tanggal ${selectedDate} April 2025`}
+            : `Jadwal tanggal ${selectedDate} ${monthLongNames[currentMonth]} ${currentYear}`}
         </p>
       </div>
 
@@ -120,7 +203,13 @@ export default function RightPanel() {
         <div className="space-y-3">
           {filteredTrips.length > 0 ? (
             filteredTrips.map((trip) => (
-              <TripItem key={trip.title} {...trip} />
+              <TripItem 
+                key={trip.title} 
+                title={trip.title}
+                date={getTripDateString(trip)}
+                quota={trip.quota}
+                img={trip.img}
+              />
             ))
           ) : (
             <div className="rounded-2xl bg-slate-50 px-4 py-6 text-center">
@@ -148,9 +237,9 @@ export default function RightPanel() {
         </div>
 
         <div className="relative border-l border-slate-100 ml-2.5 pl-5 space-y-4 py-1">
-          <ActivityItem time="12:30 PM" iconBg="bg-blue-900" text={<span><strong className="text-slate-900">Tonmoy Hasan (admin)</strong> updated the Cox's Bazar Travel Package</span>} />
-          <ActivityItem time="12:30 PM" iconBg="bg-blue-600" text={<span><strong className="text-slate-900">Tonmoy Hasan (admin)</strong> updated the Cox's Bazar Travel Package</span>} />
-          <ActivityItem time="12:30 PM" iconBg="bg-indigo-900" text={<span><strong className="text-slate-900">Tonmoy Hasan (admin)</strong> updated the Cox's Bazar Travel Package</span>} />
+          <ActivityItem time="12:30 PM" iconBg="bg-blue-900" text={<span><strong className="text-slate-900">Nabil Falah (admin)</strong> memperbarui Paket Wisata Raja Ampat</span>} />
+          <ActivityItem time="01:15 PM" iconBg="bg-blue-600" text={<span><strong className="text-slate-900">Nabil Falah (admin)</strong> memperbarui Paket Wisata Labuan Bajo</span>} />
+          <ActivityItem time="03:40 PM" iconBg="bg-indigo-900" text={<span><strong className="text-slate-900">Nabil Falah (admin)</strong> memperbarui Paket Wisata Ubud, Bali</span>} />
         </div>
       </div>
 
@@ -162,7 +251,7 @@ export default function RightPanel() {
         </div>
 
         <span className="block text-[10px] font-bold text-slate-400 mb-3 uppercase tracking-wider">Followers Stats</span>
-        
+
         {/* Social Grid 3 Kolom */}
         <div className="grid grid-cols-3 gap-y-4 gap-x-2 text-center pb-4 border-b border-slate-100">
           <SocialStat icon={<FaYoutube className="text-red-600" />} count="2,344" label="Subscribers" />

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import aktivitasData from "../Data/AktivitasUser.json";
-import { FaEye, FaTrash, FaSearch, FaClock, FaUser, FaChartLine } from "react-icons/fa";
+import { supabase } from "../lib/supabase";
+import { FaEye, FaTrash, FaSearch, FaClock, FaUser, FaChartLine, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,13 +28,50 @@ import {
 
 export default function AktivitasUser() {
   const navigate = useNavigate();
-  const [data, setData] = useState(aktivitasData);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
   const [deleteData, setDeleteData] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
-  const hapusData = () => {
-    setData(data.filter((item) => item.id_customer !== deleteData.id_customer));
-    setDeleteData(null);
+  const fetchAktivitas = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const { data: dbData, error: err } = await supabase.from("aktivitas").select("*");
+      if (err) throw err;
+      setData(dbData || []);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Gagal memuat data aktivitas");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAktivitas();
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
+  const hapusData = async () => {
+    try {
+      const { error: err } = await supabase
+        .from("aktivitas")
+        .delete()
+        .eq("id_customer", deleteData.id_customer);
+      if (err) throw err;
+      setData(data.filter((item) => item.id_customer !== deleteData.id_customer));
+      setDeleteData(null);
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menghapus data aktivitas: " + err.message);
+    }
   };
 
   const filterData = data.filter((item) => {
@@ -44,6 +81,10 @@ export default function AktivitasUser() {
       item.login_terakhir?.toLowerCase().includes(keyword)
     );
   });
+
+  const totalPages = Math.ceil(filterData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = filterData.slice(startIndex, startIndex + itemsPerPage);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "-";
@@ -57,7 +98,6 @@ export default function AktivitasUser() {
   };
 
   const getStatusBadgeStyle = (status) => {
-    // status based on recent login
     const loginDate = new Date(status);
     const now = new Date();
     const daysDiff = (now - loginDate) / (1000 * 60 * 60 * 24);
@@ -76,6 +116,24 @@ export default function AktivitasUser() {
     if (daysDiff < 7) return "🟡 Aktif (Seminggu)";
     return "🔴 Tidak Aktif";
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-200">
+          {error}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6 space-y-6">
@@ -183,14 +241,14 @@ export default function AktivitasUser() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filterData.length > 0 ? (
-                  filterData.map((item, index) => (
+                {paginatedData.length > 0 ? (
+                  paginatedData.map((item, index) => (
                     <TableRow
                       key={item.id_customer}
                       className="border-b border-slate-100 hover:bg-blue-50/40 transition-colors"
                     >
                       <TableCell className="text-center font-medium text-slate-500 py-3.5">
-                        {index + 1}
+                        {startIndex + index + 1}
                       </TableCell>
                       <TableCell className="font-medium text-slate-800">
                         <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold">
@@ -239,6 +297,81 @@ export default function AktivitasUser() {
                 )}
               </TableBody>
             </Table>
+          </div>
+
+          {/* COOL PAGINATION */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-slate-100 bg-slate-50/30">
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-xs text-slate-500 font-medium">
+                Menampilkan <span className="font-semibold text-slate-800">{filterData.length === 0 ? 0 : startIndex + 1}</span> sampai{" "}
+                <span className="font-semibold text-slate-800">{Math.min(startIndex + itemsPerPage, filterData.length)}</span> dari{" "}
+                <span className="font-semibold text-slate-800">{filterData.length}</span> data
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-300 text-xs">|</span>
+                <span className="text-xs text-slate-500">Tampilkan:</span>
+                <select 
+                  value={itemsPerPage} 
+                  onChange={(e) => {
+                    setItemsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="text-xs font-semibold bg-white border border-slate-200 rounded-lg p-1 text-slate-700 outline-none focus:border-blue-600 transition-colors shadow-xs"
+                >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <Button 
+                variant="outline" 
+                size="icon"
+                className="w-8 h-8 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-100 disabled:opacity-55 transition-all"
+                disabled={currentPage === 1} 
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                <FaChevronLeft className="h-3 w-3" />
+              </Button>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(page => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1)
+                .map((page, idx, arr) => {
+                  const prevPage = arr[idx - 1];
+                  const isCurrent = currentPage === page;
+                  return (
+                    <div key={page} className="flex items-center">
+                      {prevPage && page - prevPage > 1 && (
+                        <span className="text-slate-300 text-xs px-1.5 font-medium">...</span>
+                      )}
+                      <Button
+                        variant={isCurrent ? "default" : "outline"}
+                        className={`w-8 h-8 rounded-xl font-bold text-xs p-0 transition-all ${
+                          isCurrent 
+                            ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/15" 
+                            : "border-slate-200 text-slate-600 hover:bg-slate-100"
+                        }`}
+                        onClick={() => setCurrentPage(page)}
+                      >
+                        {page}
+                      </Button>
+                    </div>
+                  );
+                })}
+
+              <Button 
+                variant="outline" 
+                size="icon"
+                className="w-8 h-8 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-100 disabled:opacity-55 transition-all"
+                disabled={currentPage === totalPages || totalPages === 0} 
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                <FaChevronRight className="h-3 w-3" />
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

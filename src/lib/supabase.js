@@ -17,3 +17,20 @@ export const supabase = createClient(
   supabaseUrl,
   supabaseAnonKey
 );
+
+export const getNextId = async (tableName, idColumnName) => {
+  const { data, error } = await supabase
+    .from(tableName)
+    .select(idColumnName)
+    .order(idColumnName, { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) {
+    console.error(`Error fetching max id for ${tableName}:`, error.message);
+    return Math.floor(Math.random() * 100000) + 10000;
+  }
+  if (!data) {
+    return 1;
+  }
+  return Number(data[idColumnName]) + 1;
+};

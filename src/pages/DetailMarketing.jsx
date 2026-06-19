@@ -1,13 +1,46 @@
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaUser, FaChartBar, FaTag, FaCheckCircle, FaTrophy } from "react-icons/fa";
-import marketingData from "../Data/Marketing.json";
+import { supabase } from "../lib/supabase";
 
 export default function DetailMarketing() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const detail = marketingData.find((item) => item.id_customer === id);
+  const [detail, setDetail] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  if (!detail) {
+  useEffect(() => {
+    const fetchDetail = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const { data, error: err } = await supabase
+          .from("marketing")
+          .select("*")
+          .eq("id_customer", id)
+          .single();
+        if (err) throw err;
+        setDetail(data);
+      } catch (err) {
+        console.error(err);
+        setError(err.message || "Gagal memuat detail marketing");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDetail();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (error || !detail) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 space-y-4">
         <div className="p-6 bg-white rounded-2xl shadow-xl text-center">

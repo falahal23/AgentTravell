@@ -9,7 +9,7 @@ import {
   FiGrid,      
   FiBook,      
   FiActivity,  
-  FiTarget     
+  FiTarget
 } from "react-icons/fi";
 
 export default function Sidebar() {

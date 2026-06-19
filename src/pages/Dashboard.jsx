@@ -55,17 +55,17 @@ export default function Dashboard() {
 
         <div className="grid grid-cols-3 gap-6">
           <PackageCard
-            title="Cox's Bazar"
+            title="Raja Ampat"
             img="https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
           />
 
           <PackageCard
-            title="Sajek Valley"
+            title="Labuan Bajo"
             img="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
           />
 
           <PackageCard
-            title="Bandarban"
+            title="Gunung Bromo"
             img="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429"
           />
         </div>
@@ -172,11 +172,11 @@ p-2
           </div>
 
           <div className="space-y-4 mt-5">
-            <Destination name="Cox's Bazar" percent={75} />
+            <Destination name="Raja Ampat" percent={75} />
 
-            <Destination name="Sajek Valley" percent={55} />
+            <Destination name="Labuan Bajo" percent={55} />
 
-            <Destination name="Bandarban" percent={35} />
+            <Destination name="Gunung Bromo" percent={35} />
           </div>
         </div>
       </div>

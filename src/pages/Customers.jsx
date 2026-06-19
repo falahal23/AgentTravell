@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
-import { FaEnvelope, FaPhone, FaPlus, FaSearch, FaCrown, FaEye } from "react-icons/fa";
+import { FaEnvelope, FaPhone, FaPlus, FaSearch, FaCrown, FaEye, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
-import customersData from "../Data/customers.json";
+import { supabase, getNextId } from "../lib/supabase";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,17 +10,56 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export default function Customers() {
-  const [customers, setCustomers] = useState(customersData);
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [loyaltyFilter, setLoyaltyFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [itemsPerPage, setItemsPerPage] = useState(5);
   const searchInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
     customerName: "", email: "", phone: "", loyalty: "Gold",
   });
+
+  const fetchCustomers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const { data, error: err } = await supabase
+        .from("customers")
+        .select(`
+          id_customer,
+          nama_lengkap,
+          username,
+          jenis_kelamin,
+          tanggal_lahir,
+          kontak (no_hp, email),
+          membership (level_membership)
+        `);
+      if (err) throw err;
+
+      const mapped = (data || []).map((item) => ({
+        customerId: item.id_customer,
+        customerName: item.nama_lengkap || item.username || "-",
+        email: item.kontak?.[0]?.email || "-",
+        phone: item.kontak?.[0]?.no_hp || "-",
+        loyalty: item.membership?.[0]?.level_membership || "Bronze",
+      }));
+      setCustomers(mapped);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Gagal memuat data customer");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
 
   const filteredCustomers = customers.filter((c) => {
     const matchSearch =
@@ -34,20 +73,66 @@ export default function Customers() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedCustomers = filteredCustomers.slice(startIndex, startIndex + itemsPerPage);
 
-  useEffect(() => { searchInputRef.current?.focus(); }, []);
+  useEffect(() => { searchInputRef.current?.focus(); }, [loading]);
   useEffect(() => { setCurrentPage(1); }, [searchTerm, loyaltyFilter]);
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newCustomer = {
-      customerId: "C" + (customers.length + 1).toString().padStart(3, "0"),
-      ...formData,
-    };
-    setCustomers([...customers, newCustomer]);
-    setFormData({ customerName: "", email: "", phone: "", loyalty: "Gold" });
-    setShowForm(false);
+    try {
+      const customerId = "CUST" + Math.floor(1000 + Math.random() * 9000);
+      
+      // Fetch next IDs
+      const nextKontakId = await getNextId("kontak", "id_kontak");
+      const nextMembershipId = await getNextId("membership", "id_membership");
+
+      // 1. Insert customer
+      const { error: custErr } = await supabase.from("customers").insert([
+        {
+          id_customer: customerId,
+          nama_lengkap: formData.customerName,
+          username: formData.customerName.toLowerCase().replace(/\s+/g, "_"),
+          jenis_kelamin: "Laki-laki",
+          tanggal_lahir: "2000-01-01",
+        },
+      ]);
+      if (custErr) throw custErr;
+
+      // 2. Insert kontak
+      const { error: kontakErr } = await supabase.from("kontak").insert([
+        {
+          id_kontak: nextKontakId,
+          id_customer: customerId,
+          email: formData.email,
+          no_hp: formData.phone,
+          alamat: "-",
+          kota: "-",
+          provinsi: "-"
+        },
+      ]);
+      if (kontakErr) throw kontakErr;
+
+      // 3. Insert membership
+      const { error: memberErr } = await supabase.from("membership").insert([
+        {
+          id_membership: nextMembershipId,
+          id_customer: customerId,
+          level_membership: formData.loyalty,
+          status_member: "Member",
+          status_aktif: "Aktif",
+          tanggal_daftar: new Date().toISOString().split("T")[0],
+        },
+      ]);
+      if (memberErr) throw memberErr;
+
+      await fetchCustomers();
+      setFormData({ customerName: "", email: "", phone: "", loyalty: "Gold" });
+      setShowForm(false);
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menambahkan customer: " + err.message);
+    }
   };
 
   const getLoyaltyStyle = (tier) => {
@@ -60,6 +145,24 @@ export default function Customers() {
   };
 
   const getLoyaltyCount = (tier) => customers.filter((c) => c.loyalty === tier).length;
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0d9488]"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-200">
+          {error}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 p-2">
@@ -120,7 +223,6 @@ export default function Customers() {
           <Table>
             <TableHeader>
               <TableRow className="bg-gradient-to-r from-blue-900 to-blue-800 hover:from-blue-900 hover:to-blue-800">
-                {/* GANTI ID → NO */}
                 <TableHead className="text-white font-semibold w-14">No</TableHead>
                 <TableHead className="text-white font-semibold">Customer</TableHead>
                 <TableHead className="text-white font-semibold">Contact</TableHead>
@@ -141,7 +243,6 @@ export default function Customers() {
                     key={cust.customerId}
                     className="odd:bg-white even:bg-slate-50 hover:bg-blue-50 transition-colors"
                   >
-                    {/* NOMOR URUT */}
                     <TableCell className="text-center font-semibold text-slate-500">
                       {startIndex + index + 1}
                     </TableCell>
@@ -180,31 +281,77 @@ export default function Customers() {
             </TableBody>
           </Table>
 
-          {/* PAGINATION */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-6">
-            <p className="text-sm text-slate-500">
-              Showing{" "}
-              <span className="font-semibold text-slate-700">
-                {filteredCustomers.length === 0 ? 0 : startIndex + 1}–{Math.min(startIndex + itemsPerPage, filteredCustomers.length)}
-              </span>{" "}
-              of <span className="font-semibold text-slate-700">{filteredCustomers.length}</span> customers
-            </p>
-            <div className="flex gap-2">
-              <Button variant="outline" disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
-                Previous
-              </Button>
-              {Array.from({ length: totalPages }, (_, i) => (
-                <Button
-                  key={i}
-                  variant={currentPage === i + 1 ? "default" : "outline"}
-                  className={currentPage === i + 1 ? "bg-blue-900" : ""}
-                  onClick={() => setCurrentPage(i + 1)}
+          {/* COOL PAGINATION */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-slate-100">
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-xs text-slate-500">
+                Showing <span className="font-semibold text-slate-800">{filteredCustomers.length === 0 ? 0 : startIndex + 1}</span> to{" "}
+                <span className="font-semibold text-slate-800">{Math.min(startIndex + itemsPerPage, filteredCustomers.length)}</span> of{" "}
+                <span className="font-semibold text-slate-800">{filteredCustomers.length}</span> customers
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-300 text-xs">|</span>
+                <span className="text-xs text-slate-500">Show:</span>
+                <select 
+                  value={itemsPerPage} 
+                  onChange={(e) => {
+                    setItemsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="text-xs font-semibold bg-slate-50 border border-slate-200 rounded-lg p-1 text-slate-700 outline-none focus:border-blue-900 transition-colors"
                 >
-                  {i + 1}
-                </Button>
-              ))}
-              <Button variant="outline" disabled={currentPage === totalPages || totalPages === 0} onClick={() => setCurrentPage(currentPage + 1)}>
-                Next
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <Button 
+                variant="outline" 
+                size="icon"
+                className="w-8 h-8 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800 disabled:opacity-55 transition-all"
+                disabled={currentPage === 1} 
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                <FaChevronLeft className="h-3 w-3" />
+              </Button>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(page => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1)
+                .map((page, idx, arr) => {
+                  const prevPage = arr[idx - 1];
+                  const isCurrent = currentPage === page;
+                  return (
+                    <div key={page} className="flex items-center">
+                      {prevPage && page - prevPage > 1 && (
+                        <span className="text-slate-300 text-xs px-1.5 font-medium">...</span>
+                      )}
+                      <Button
+                        variant={isCurrent ? "default" : "outline"}
+                        className={`w-8 h-8 rounded-xl font-bold text-xs p-0 transition-all ${
+                          isCurrent 
+                            ? "bg-gradient-to-r from-blue-900 to-blue-800 text-white shadow-md shadow-blue-900/15" 
+                            : "border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                        }`}
+                        onClick={() => setCurrentPage(page)}
+                      >
+                        {page}
+                      </Button>
+                    </div>
+                  );
+                })}
+
+              <Button 
+                variant="outline" 
+                size="icon"
+                className="w-8 h-8 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800 disabled:opacity-55 transition-all"
+                disabled={currentPage === totalPages || totalPages === 0} 
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                <FaChevronRight className="h-3 w-3" />
               </Button>
             </div>
           </div>

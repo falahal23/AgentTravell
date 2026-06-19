@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import marketingData from "../Data/Marketing.json";
-import { FaEye, FaTrash, FaSearch, FaFire, FaChartBar, FaUsers, FaFilter, FaUndo } from "react-icons/fa";
+import { FaEye, FaTrash, FaSearch, FaFire, FaChartBar, FaUsers, FaFilter, FaUndo, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,6 +34,12 @@ export default function Marketing() {
   const [sourceFilter, setSourceFilter] = useState("Semua");
   const [promoFilter, setPromoFilter] = useState("Semua");
   const [sortBy, setSortBy] = useState("id-asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, sourceFilter, promoFilter, sortBy]);
 
   const hapusData = () => {
     setData(data.filter((item) => item.id_customer !== deleteData.id_customer));
@@ -59,6 +65,11 @@ export default function Marketing() {
       if (sortBy === "promo") return a.status_promo.localeCompare(b.status_promo);
       return a.id_customer.localeCompare(b.id_customer);
     });
+
+  const totalPages = Math.ceil(filterData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = filterData.slice(startIndex, startIndex + itemsPerPage);
+
   const hasActiveFilter = search || sourceFilter !== "Semua" || promoFilter !== "Semua" || sortBy !== "id-asc";
   const resetFilters = () => {
     setSearch("");
@@ -211,14 +222,14 @@ export default function Marketing() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filterData.length > 0 ? (
-                  filterData.map((item, index) => (
+                {paginatedData.length > 0 ? (
+                  paginatedData.map((item, index) => (
                     <TableRow
                       key={item.id_customer}
                       className="border-b border-slate-100 hover:bg-blue-50/40 transition-colors"
                     >
                       <TableCell className="text-center font-medium text-slate-500 py-3.5">
-                        {index + 1}
+                        {startIndex + index + 1}
                       </TableCell>
                       <TableCell className="font-medium text-slate-800">
                         <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold">
@@ -267,6 +278,81 @@ export default function Marketing() {
                 )}
               </TableBody>
             </Table>
+          </div>
+
+          {/* COOL PAGINATION */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-slate-100 bg-slate-50/30">
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-xs text-slate-500 font-medium">
+                Menampilkan <span className="font-semibold text-slate-800">{filterData.length === 0 ? 0 : startIndex + 1}</span> sampai{" "}
+                <span className="font-semibold text-slate-800">{Math.min(startIndex + itemsPerPage, filterData.length)}</span> dari{" "}
+                <span className="font-semibold text-slate-800">{filterData.length}</span> data
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-300 text-xs">|</span>
+                <span className="text-xs text-slate-500">Tampilkan:</span>
+                <select 
+                  value={itemsPerPage} 
+                  onChange={(e) => {
+                    setItemsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="text-xs font-semibold bg-white border border-slate-200 rounded-lg p-1 text-slate-700 outline-none focus:border-blue-600 transition-colors shadow-xs"
+                >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <Button 
+                variant="outline" 
+                size="icon"
+                className="w-8 h-8 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-100 disabled:opacity-55 transition-all"
+                disabled={currentPage === 1} 
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                <FaChevronLeft className="h-3 w-3" />
+              </Button>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(page => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1)
+                .map((page, idx, arr) => {
+                  const prevPage = arr[idx - 1];
+                  const isCurrent = currentPage === page;
+                  return (
+                    <div key={page} className="flex items-center">
+                      {prevPage && page - prevPage > 1 && (
+                        <span className="text-slate-300 text-xs px-1.5 font-medium">...</span>
+                      )}
+                      <Button
+                        variant={isCurrent ? "default" : "outline"}
+                        className={`w-8 h-8 rounded-xl font-bold text-xs p-0 transition-all ${
+                          isCurrent 
+                            ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/15" 
+                            : "border-slate-200 text-slate-600 hover:bg-slate-100"
+                        }`}
+                        onClick={() => setCurrentPage(page)}
+                      >
+                        {page}
+                      </Button>
+                    </div>
+                  );
+                })}
+
+              <Button 
+                variant="outline" 
+                size="icon"
+                className="w-8 h-8 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-100 disabled:opacity-55 transition-all"
+                disabled={currentPage === totalPages || totalPages === 0} 
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                <FaChevronRight className="h-3 w-3" />
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

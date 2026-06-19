@@ -261,7 +261,7 @@ export default function LandingPage() {
               organized."
             </p>
 
-            <h4 className="mt-5 font-bold">Budi Santoso</h4>
+            <h4 className="mt-5 font-bold">Falahal Nabil</h4>
           </div>
         </div>
       </section>

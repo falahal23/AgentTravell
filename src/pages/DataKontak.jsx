@@ -8,6 +8,8 @@ import {
   FaUsers,
   FaCopy,
   FaMapMarkerAlt,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,7 +36,7 @@ export default function DataKontak() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalKontak, setTotalKontak] = useState(0);
   const searchRef = useRef(null);
-  const itemsPerPage = 5;
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   const cities = ["All", ...new Set(kontak.map((item) => item.kota))];
   const provinces = ["All", ...new Set(kontak.map((item) => item.provinsi))];
@@ -300,56 +302,77 @@ export default function DataKontak() {
             </Table>
           </div>
 
-          {/* PAGINATION */}
-          <div className="flex flex-col sm:flex-row justify-between items-center p-5 border-t border-slate-100 gap-4 bg-slate-50/50">
-            <p className="text-sm font-medium text-slate-500">
-              Menampilkan{" "}
-              <span className="text-slate-800">
-                {filteredData.length === 0 ? 0 : startIndex + 1}
-              </span>{" "}
-              sampai{" "}
-              <span className="text-slate-800">
-                {Math.min(startIndex + itemsPerPage, filteredData.length)}
-              </span>{" "}
-              dari <span className="text-slate-800">{filteredData.length}</span>{" "}
-              data
-            </p>
+          {/* COOL PAGINATION */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 p-5 border-t border-slate-100 bg-slate-50/30">
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-xs text-slate-500 font-medium">
+                Menampilkan <span className="font-semibold text-slate-800">{filteredData.length === 0 ? 0 : startIndex + 1}</span> sampai{" "}
+                <span className="font-semibold text-slate-800">{Math.min(startIndex + itemsPerPage, filteredData.length)}</span> dari{" "}
+                <span className="font-semibold text-slate-800">{filteredData.length}</span> data
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-300 text-xs">|</span>
+                <span className="text-xs text-slate-500">Tampilkan:</span>
+                <select 
+                  value={itemsPerPage} 
+                  onChange={(e) => {
+                    setItemsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="text-xs font-semibold bg-white border border-slate-200 rounded-lg p-1 text-slate-700 outline-none focus:border-blue-600 transition-colors shadow-xs"
+                >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                </select>
+              </div>
+            </div>
 
-            <div className="flex gap-1.5">
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-lg border-slate-200 text-slate-600 hover:bg-slate-100"
-                disabled={currentPage === 1}
+            <div className="flex items-center gap-1.5">
+              <Button 
+                variant="outline" 
+                size="icon"
+                className="w-8 h-8 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-100 disabled:opacity-55 transition-all"
+                disabled={currentPage === 1} 
                 onClick={() => setCurrentPage(currentPage - 1)}
               >
-                Sebelumnya
+                <FaChevronLeft className="h-3 w-3" />
               </Button>
 
-              {Array.from({ length: totalPages }, (_, i) => (
-                <Button
-                  key={i}
-                  size="sm"
-                  variant={currentPage === i + 1 ? "default" : "outline"}
-                  className={`w-9 h-9 rounded-lg ${
-                    currentPage === i + 1
-                      ? "bg-blue-600 hover:bg-blue-700 text-white border-transparent"
-                      : "border-slate-200 text-slate-600 hover:bg-slate-100"
-                  }`}
-                  onClick={() => setCurrentPage(i + 1)}
-                >
-                  {i + 1}
-                </Button>
-              ))}
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(page => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1)
+                .map((page, idx, arr) => {
+                  const prevPage = arr[idx - 1];
+                  const isCurrent = currentPage === page;
+                  return (
+                    <div key={page} className="flex items-center">
+                      {prevPage && page - prevPage > 1 && (
+                        <span className="text-slate-300 text-xs px-1.5 font-medium">...</span>
+                      )}
+                      <Button
+                        variant={isCurrent ? "default" : "outline"}
+                        className={`w-8 h-8 rounded-xl font-bold text-xs p-0 transition-all ${
+                          isCurrent 
+                            ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/15" 
+                            : "border-slate-200 text-slate-600 hover:bg-slate-100"
+                        }`}
+                        onClick={() => setCurrentPage(page)}
+                      >
+                        {page}
+                      </Button>
+                    </div>
+                  );
+                })}
 
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-lg border-slate-200 text-slate-600 hover:bg-slate-100"
-                disabled={currentPage === totalPages || totalPages === 0}
+              <Button 
+                variant="outline" 
+                size="icon"
+                className="w-8 h-8 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-100 disabled:opacity-55 transition-all"
+                disabled={currentPage === totalPages || totalPages === 0} 
                 onClick={() => setCurrentPage(currentPage + 1)}
               >
-                Selanjutnya
+                <FaChevronRight className="h-3 w-3" />
               </Button>
             </div>
           </div>

@@ -44,6 +44,12 @@ const Forgot = React.lazy(() => import("./pages/auth/Forgot"));
 // ERROR
 const ErrorPage = React.lazy(() => import("./pages/NotFound"));
 
+// MEMBER PORTAL
+const MemberLayout = React.lazy(() => import("./layouts/MemberLayout"));
+const MemberLogin = React.lazy(() => import("./pages/auth/MemberLogin"));
+const MemberRegister = React.lazy(() => import("./pages/auth/MemberRegister"));
+const MemberDashboard = React.lazy(() => import("./pages/member/MemberDashboard"));
+
 function App() {
   return (
     <Suspense fallback={<Loading />}>
@@ -56,6 +62,15 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot" element={<Forgot />} />
+        </Route>
+
+        {/* MEMBER AUTH */}
+        <Route path="/member/login" element={<MemberLogin />} />
+        <Route path="/member/register" element={<MemberRegister />} />
+
+        {/* MEMBER PORTAL */}
+        <Route element={<MemberLayout />}>
+          <Route path="/member/dashboard" element={<MemberDashboard />} />
         </Route>
 
         {/* ADMIN */}

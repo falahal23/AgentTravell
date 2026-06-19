@@ -1,7 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import dataInteraksi from "../Data/RiwayatInteraksi.json";
-import { FaEye, FaTrash, FaSearch, FaFilter, FaSyncAlt } from "react-icons/fa";
+import { supabase } from "../lib/supabase";
+import { FaEye, FaTrash, FaSearch, FaFilter, FaSyncAlt, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
 
 function getInitials(name) {
   return name
@@ -39,16 +40,52 @@ const SORT_OPTIONS = [
 
 export default function RiwayatInteraksi() {
   const navigate = useNavigate();
-  const [data, setData] = useState(dataInteraksi);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
   const [activeFeedback, setActiveFeedback] = useState("Semua");
   const [activeCS, setActiveCS] = useState("Semua");
   const [sortBy, setSortBy] = useState("");
   const [detail, setDetail] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(6);
+
+  const fetchInteraksi = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const { data: dbData, error: err } = await supabase.from("interaksi").select("*");
+      if (err) throw err;
+
+      const mapped = (dbData || []).map((item) => ({
+        id_customer: item.id_customer,
+        customer_service: item.chat_cs || "Tidak Pernah Chat",
+        riwayat_komplain: item.riwayat_komplain || "-",
+        feedback: item.feedback_review || "Netral",
+        catatan_admin: item.catatan_admin || "",
+        id_interaksi: item.id_interaksi,
+      }));
+      setData(mapped);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Gagal memuat data interaksi");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchInteraksi();
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, activeFeedback, activeCS, sortBy]);
 
   const csOptions = useMemo(
-    () => ["Semua", ...new Set(dataInteraksi.map((i) => i.customer_service))],
-    [],
+    () => ["Semua", ...new Set(data.map((i) => i.customer_service))],
+    [data],
   );
 
   const filtered = useMemo(() => {
@@ -84,6 +121,10 @@ export default function RiwayatInteraksi() {
     return result;
   }, [data, search, activeFeedback, activeCS, sortBy]);
 
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = filtered.slice(startIndex, startIndex + itemsPerPage);
+
   const resetFilters = () => {
     setSearch("");
     setActiveFeedback("Semua");
@@ -91,13 +132,25 @@ export default function RiwayatInteraksi() {
     setSortBy("");
   };
 
-  const hapus = (id) => {
-    if (window.confirm("Hapus riwayat interaksi ini?"))
-      setData((prev) => prev.filter((i) => i.id_customer !== id));
+  const hapus = async (id) => {
+    if (window.confirm("Hapus riwayat interaksi ini?")) {
+      try {
+        const { error: err } = await supabase
+          .from("interaksi")
+          .delete()
+          .eq("id_customer", id);
+        if (err) throw err;
+        setData((prev) => prev.filter((i) => i.id_customer !== id));
+      } catch (err) {
+        console.error(err);
+        alert("Gagal menghapus interaksi: " + err.message);
+      }
+    }
   };
 
   const hasFilter =
     activeFeedback !== "Semua" || activeCS !== "Semua" || search;
+
   const pillFeedback = {
     Semua: "bg-[#1018A8] text-white",
     Positif: "bg-green-100 text-green-700",
@@ -105,6 +158,23 @@ export default function RiwayatInteraksi() {
     Netral: "bg-yellow-100 text-yellow-700",
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-200">
+          {error}
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-[#EAF2FF] p-6">
       {/* HEADER */}
@@ -221,25 +291,14 @@ export default function RiwayatInteraksi() {
         )}
       </div>
 
-      {/* RESULT INFO */}
-      {hasFilter && (
-        <p className="text-xs text-gray-400 mb-3">
-          Menampilkan{" "}
-          <span className="font-semibold text-gray-700">{filtered.length}</span>{" "}
-          dari{" "}
-          <span className="font-semibold text-gray-700">{data.length}</span>{" "}
-          interaksi
-        </p>
-      )}
-
       {/* CARD GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-        {filtered.length === 0 && (
+        {paginatedData.length === 0 && (
           <p className="text-gray-400 text-sm col-span-full text-center py-12">
             Tidak ada data yang cocok dengan filter.
           </p>
         )}
-        {filtered.map((item) => (
+        {paginatedData.map((item) => (
           <div
             key={item.id_customer}
             className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:border-blue-200 transition-colors"
@@ -292,6 +351,81 @@ export default function RiwayatInteraksi() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* COOL PAGINATION */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 p-5 rounded-2xl border border-gray-100 bg-white shadow-sm">
+        <div className="flex flex-wrap items-center gap-3">
+          <p className="text-xs text-slate-500 font-medium">
+            Menampilkan <span className="font-semibold text-slate-800">{filtered.length === 0 ? 0 : startIndex + 1}</span> sampai{" "}
+            <span className="font-semibold text-slate-800">{Math.min(startIndex + itemsPerPage, filtered.length)}</span> dari{" "}
+            <span className="font-semibold text-slate-800">{filtered.length}</span> data
+          </p>
+          <div className="flex items-center gap-2">
+            <span className="text-slate-300 text-xs">|</span>
+            <span className="text-xs text-slate-500">Tampilkan:</span>
+            <select 
+              value={itemsPerPage} 
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="text-xs font-semibold bg-slate-50 border border-slate-200 rounded-lg p-1 text-slate-700 outline-none focus:border-blue-600 transition-colors shadow-xs"
+            >
+              <option value={6}>6</option>
+              <option value={12}>12</option>
+              <option value={24}>24</option>
+              <option value={60}>60</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1.5">
+          <Button 
+            variant="outline" 
+            size="icon"
+            className="w-8 h-8 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-55 transition-all"
+            disabled={currentPage === 1} 
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            <FaChevronLeft className="h-3 w-3" />
+          </Button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter(page => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1)
+            .map((page, idx, arr) => {
+              const prevPage = arr[idx - 1];
+              const isCurrent = currentPage === page;
+              return (
+                <div key={page} className="flex items-center">
+                  {prevPage && page - prevPage > 1 && (
+                    <span className="text-slate-300 text-xs px-1.5 font-medium">...</span>
+                  )}
+                  <Button
+                    variant={isCurrent ? "default" : "outline"}
+                    className={`w-8 h-8 rounded-xl font-bold text-xs p-0 transition-all ${
+                      isCurrent 
+                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/15" 
+                        : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                    }`}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </Button>
+                </div>
+              );
+            })}
+
+          <Button 
+            variant="outline" 
+            size="icon"
+            className="w-8 h-8 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-55 transition-all"
+            disabled={currentPage === totalPages || totalPages === 0} 
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            <FaChevronRight className="h-3 w-3" />
+          </Button>
+        </div>
       </div>
 
       {/* MODAL */}

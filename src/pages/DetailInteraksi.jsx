@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import dataInteraksi from "../Data/RiwayatInteraksi.json";
+import { supabase } from "../lib/supabase";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -47,29 +47,99 @@ function getFeedbackColor(feedback) {
 export default function DetailInteraksi() {
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const item = dataInteraksi.find((d) => d.id_customer === id);
-
-  const [catatan, setCatatan] = useState(item?.catatan_admin || "");
+  const [item, setItem] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [catatan, setCatatan] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  if (!item) {
+  useEffect(() => {
+    const fetchDetail = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const { data, error: err } = await supabase
+          .from("interaksi")
+          .select("*")
+          .eq("id_customer", id)
+          .single();
+        if (err) throw err;
+
+        if (data) {
+          const mapped = {
+            id_customer: data.id_customer,
+            customer_service: data.chat_cs || "Tidak Pernah Chat",
+            riwayat_komplain: data.riwayat_komplain || "-",
+            feedback: data.feedback_review || "Netral",
+            catatan_admin: data.catatan_admin || "",
+            id_interaksi: data.id_interaksi
+          };
+          setItem(mapped);
+          setCatatan(mapped.catatan_admin);
+        }
+      } catch (err) {
+        console.error(err);
+        setError(err.message || "Gagal memuat detail interaksi");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDetail();
+  }, [id]);
+
+  const handleSave = async () => {
+    try {
+      const { error: err } = await supabase
+        .from("interaksi")
+        .update({ catatan_admin: catatan })
+        .eq("id_customer", item.id_customer);
+      if (err) throw err;
+
+      setSaved(true);
+      setEditMode(false);
+      setTimeout(() => setSaved(false), 2500);
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menyimpan catatan admin: " + err.message);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const { error: err } = await supabase
+        .from("interaksi")
+        .delete()
+        .eq("id_customer", item.id_customer);
+      if (err) throw err;
+      navigate(-1);
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menghapus data interaksi: " + err.message);
+    }
+  };
+
+  if (loading) {
     return (
       <div className="min-h-screen bg-[#EAF2FF] flex items-center justify-center">
-        <Card className="w-80 text-center p-6">
-          <p className="text-gray-500 mb-4">Data tidak ditemukan.</p>
-          <Button onClick={() => navigate(-1)}>Kembali</Button>
+        <Card className="w-80 text-center p-6 flex flex-col items-center justify-center gap-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <p className="text-gray-500 text-sm">Memuat data interaksi...</p>
         </Card>
       </div>
     );
   }
 
-  const handleSave = () => {
-    setSaved(true);
-    setEditMode(false);
-    setTimeout(() => setSaved(false), 2500);
-  };
+  if (error || !item) {
+    return (
+      <div className="min-h-screen bg-[#EAF2FF] flex items-center justify-center">
+        <Card className="w-80 text-center p-6">
+          <p className="text-red-500 mb-4">{error || "Data tidak ditemukan."}</p>
+          <Button onClick={() => navigate(-1)}>Kembali</Button>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#EAF2FF] p-6">
@@ -258,7 +328,7 @@ export default function DetailInteraksi() {
                     <AlertDialogCancel>Batal</AlertDialogCancel>
                     <AlertDialogAction
                       className="bg-red-600 hover:bg-red-700"
-                      onClick={() => navigate(-1)}
+                      onClick={handleDelete}
                     >
                       Ya, Hapus
                     </AlertDialogAction>
