@@ -36,10 +36,32 @@ export default function MemberLogin() {
 
       if (authErr) throw authErr;
 
-      localStorage.setItem("member_user", JSON.stringify(data.user));
-      localStorage.setItem("member_session", JSON.stringify(data.session));
+      // Check if email exists in kontak table (which maps to customer/member)
+      const { data: kontakData, error: kontakErr } = await supabase
+        .from("kontak")
+        .select("id_customer")
+        .eq("email", formData.email.trim())
+        .maybeSingle();
 
-      navigate("/member/dashboard");
+      if (kontakErr) {
+        console.error("Error checking user role:", kontakErr);
+      }
+
+      if (kontakData) {
+        // User is a member
+        localStorage.setItem("member_user", JSON.stringify(data.user));
+        localStorage.setItem("member_session", JSON.stringify(data.session));
+        localStorage.removeItem("user");
+        localStorage.removeItem("session");
+        navigate("/member/dashboard");
+      } else {
+        // User is an admin
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("session", JSON.stringify(data.session));
+        localStorage.removeItem("member_user");
+        localStorage.removeItem("member_session");
+        navigate("/dashboard");
+      }
     } catch (err) {
       console.error(err);
       setError(err.message || "Email atau password salah.");

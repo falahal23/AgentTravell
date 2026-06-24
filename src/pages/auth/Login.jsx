@@ -44,17 +44,32 @@ export default function Login() {
         throw error;
       }
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(data.user)
-      );
+      // Check if email exists in kontak table (which maps to customer/member)
+      const { data: kontakData, error: kontakErr } = await supabase
+        .from("kontak")
+        .select("id_customer")
+        .eq("email", dataForm.email.trim())
+        .maybeSingle();
 
-      localStorage.setItem(
-        "session",
-        JSON.stringify(data.session)
-      );
+      if (kontakErr) {
+        console.error("Error checking user role:", kontakErr);
+      }
 
-      navigate("/dashboard");
+      if (kontakData) {
+        // User is a member
+        localStorage.setItem("member_user", JSON.stringify(data.user));
+        localStorage.setItem("member_session", JSON.stringify(data.session));
+        localStorage.removeItem("user");
+        localStorage.removeItem("session");
+        navigate("/member/dashboard");
+      } else {
+        // User is an admin
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("session", JSON.stringify(data.session));
+        localStorage.removeItem("member_user");
+        localStorage.removeItem("member_session");
+        navigate("/dashboard");
+      }
     } catch (err) {
       setError(err.message || "Login gagal");
     } finally {
