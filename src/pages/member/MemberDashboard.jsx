@@ -16,6 +16,30 @@ export default function MemberDashboard() {
   const [interactions, setInteractions] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [baseDiscount, setBaseDiscount] = useState(() => {
+    const saved = localStorage.getItem("member_base_discount");
+    return saved ? parseFloat(saved) : 5;
+  });
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const saved = localStorage.getItem("member_base_discount");
+      setBaseDiscount(saved ? parseFloat(saved) : 5);
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
+  const discountPct = useMemo(() => {
+    const tier = membership?.level_membership || "Bronze";
+    const name = tier.trim().toLowerCase();
+    if (name === "platinum") return baseDiscount * 3;
+    if (name === "gold") return baseDiscount * 2;
+    if (name === "silver") return baseDiscount * 1.2;
+    if (name === "bronze") return baseDiscount * 0.5;
+    return 0;
+  }, [baseDiscount, membership]);
+
   // Search & Filter state for table
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -46,6 +70,50 @@ export default function MemberDashboard() {
   const [checkoutPaymentMethod, setCheckoutPaymentMethod] = useState("QRIS");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
+  const [promoCodeInput, setPromoCodeInput] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [promoError, setPromoError] = useState("");
+
+  const handleApplyPromo = (codeStr) => {
+    setPromoError("");
+    setAppliedPromo(null);
+    
+    if (!codeStr.trim()) {
+      setPromoError("Masukkan kode promo");
+      return;
+    }
+    
+    const saved = localStorage.getItem("travelgo_promos");
+    const promosList = saved ? JSON.parse(saved) : [];
+    const found = promosList.find(p => p.code.trim().toUpperCase() === codeStr.trim().toUpperCase());
+    
+    if (!found) {
+      setPromoError("Kode promo tidak valid");
+      return;
+    }
+    
+    const userTier = membership?.level_membership || "Bronze";
+    const promoMinTier = found.minTier || "Basic";
+    
+    const TIER_RANKS = {
+      "basic": 0,
+      "bronze": 1,
+      "silver": 2,
+      "gold": 3,
+      "platinum": 4
+    };
+    
+    const userRank = TIER_RANKS[userTier.trim().toLowerCase()] ?? 1;
+    const promoMinRank = TIER_RANKS[promoMinTier.trim().toLowerCase()] ?? 0;
+    
+    if (userRank < promoMinRank) {
+      setPromoError(`Kode promo ini hanya berlaku untuk member tingkat ${promoMinTier} ke atas!`);
+      return;
+    }
+    
+    setAppliedPromo(found);
+    setPromoError("");
+  };
 
   // Load member transactions, interactions, and details
   const fetchAllMemberData = async () => {
@@ -185,6 +253,10 @@ export default function MemberDashboard() {
       
       const nextTrxId = await getNextId("transaksi", "id_transaksi");
       const today = new Date().toISOString().split("T")[0];
+      
+      const membershipPrice = Math.round(selectedRecommendPackage.price * (1 - discountPct / 100));
+      const promoPct = appliedPromo ? appliedPromo.discount : 0;
+      const finalPrice = Math.round(membershipPrice * (1 - promoPct / 100));
 
       const { error } = await supabase
         .from("transaksi")
@@ -193,7 +265,7 @@ export default function MemberDashboard() {
             id_transaksi: nextTrxId,
             id_customer: member.id_customer,
             paket_dibeli: selectedRecommendPackage.title,
-            total_transaksi: selectedRecommendPackage.price,
+            total_transaksi: finalPrice,
             metode_pembayaran: checkoutPaymentMethod,
             tanggal_transaksi: today
           }
@@ -270,14 +342,19 @@ export default function MemberDashboard() {
   // Mock static promotion values based on tier
   const tierInfo = useMemo(() => {
     const tier = membership?.level_membership || "Bronze";
-    if (tier === "Gold") {
-      return { disc: "20%", name: "Gold Member Holiday Deal", color: "from-amber-500 to-yellow-600", text: "text-amber-400" };
+    const discStr = `${discountPct.toFixed(1).replace(/\.0$/, "")}%`;
+    if (tier === "Platinum") {
+      return { disc: discStr, name: "Platinum Member Premium Deal", color: "from-indigo-500 to-purple-600", text: "text-indigo-400" };
+    } else if (tier === "Gold") {
+      return { disc: discStr, name: "Gold Member Holiday Deal", color: "from-amber-500 to-yellow-600", text: "text-amber-400" };
     } else if (tier === "Silver") {
-      return { disc: "10%", name: "Silver Member Holiday Deal", color: "from-slate-400 to-slate-500", text: "text-slate-300" };
+      return { disc: discStr, name: "Silver Member Holiday Deal", color: "from-slate-400 to-slate-500", text: "text-slate-300" };
+    } else if (tier === "Bronze") {
+      return { disc: discStr, name: "Bronze Member Holiday Deal", color: "from-amber-700 to-amber-900", text: "text-amber-650" };
     } else {
-      return { disc: "5%", name: "Bronze Member Holiday Deal", color: "from-amber-700 to-amber-900", text: "text-amber-650" };
+      return { disc: "0%", name: "Basic Member Deal", color: "from-slate-600 to-slate-700", text: "text-slate-400" };
     }
-  }, [membership]);
+  }, [membership, discountPct]);
 
   const staticRecommendPackages = [
     {
@@ -776,13 +853,23 @@ export default function MemberDashboard() {
                     <div className="pt-3 border-t border-slate-800/50 space-y-3">
                       <div className="flex justify-between items-baseline">
                         <span className="text-[10px] font-black text-white/60 uppercase tracking-wider">Harga Paket</span>
-                        <span className="font-black text-white text-base">{formatRupiah(pkg.price)}</span>
+                        <div className="text-right">
+                          {discountPct > 0 && (
+                            <span className="line-through text-slate-550 text-xs mr-2">{formatRupiah(pkg.price)}</span>
+                          )}
+                          <span className="font-black text-white text-base">
+                            {formatRupiah(Math.round(pkg.price * (1 - discountPct / 100)))}
+                          </span>
+                        </div>
                       </div>
 
                       <button 
                         onClick={() => {
                           setSelectedRecommendPackage(pkg);
                           setCheckoutSuccess(false);
+                          setPromoCodeInput("");
+                          setAppliedPromo(null);
+                          setPromoError("");
                         }}
                         className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-black rounded-xl transition-all shadow-md shadow-indigo-500/15 cursor-pointer text-center flex items-center justify-center gap-1.5 border border-indigo-500/20"
                       >
@@ -1091,7 +1178,14 @@ export default function MemberDashboard() {
               <div className="space-y-1">
                 <h4 className="font-extrabold text-white text-sm">Tiket Booking Tercatat di CRM</h4>
                 <p className="text-[11px] text-slate-400 leading-relaxed px-4 pt-1">
-                  Transaksi Anda berhasil diverifikasi. Poin loyalitas dan statistik total transaksi Anda diperbarui secara real-time di sistem TravelGo.
+                  Transaksi Anda sebesar <b className="text-indigo-400">
+                    {formatRupiah(
+                      Math.round(
+                        Math.round((selectedRecommendPackage?.price || 0) * (1 - discountPct / 100)) * 
+                        (1 - (appliedPromo ? appliedPromo.discount : 0) / 100)
+                      )
+                    )}
+                  </b> berhasil diverifikasi. Poin loyalitas dan statistik total transaksi Anda diperbarui secara real-time di sistem TravelGo.
                 </p>
               </div>
               <button 
@@ -1107,10 +1201,68 @@ export default function MemberDashboard() {
                 <span className="text-[9px] text-slate-500 font-bold block uppercase tracking-wider">Destinasi Terpilih</span>
                 <h4 className="font-black text-white text-sm">{selectedRecommendPackage?.title}</h4>
                 <p className="text-[11px] text-slate-400 font-bold">{selectedRecommendPackage?.location} • {selectedRecommendPackage?.duration}</p>
-                <div className="flex justify-between items-center pt-2.5 border-t border-slate-850 mt-2 text-xs">
-                  <span className="text-slate-450 font-bold">Harga Paket Wisata</span>
-                  <span className="font-black text-indigo-400">{formatRupiah(selectedRecommendPackage?.price || 0)}</span>
+                
+                {/* Rincian Harga Dinamis */}
+                <div className="flex flex-col gap-2 pt-2.5 border-t border-slate-850 mt-2 text-xs">
+                  <div className="flex justify-between items-center text-slate-400">
+                    <span>Harga Awal</span>
+                    <span className="font-semibold text-slate-300">
+                      {formatRupiah(selectedRecommendPackage?.price || 0)}
+                    </span>
+                  </div>
+                  {discountPct > 0 && (
+                    <div className="flex justify-between items-center text-rose-400">
+                      <span>Diskon Tier ({membership?.level_membership})</span>
+                      <span>-{discountPct.toFixed(1).replace(/\.0$/, "")}%</span>
+                    </div>
+                  )}
+                  {appliedPromo && (
+                    <div className="flex justify-between items-center text-emerald-400">
+                      <span>Promo ({appliedPromo.code})</span>
+                      <span>-{appliedPromo.discount}%</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center pt-2 border-t border-slate-800/60 mt-1">
+                    <span className="font-bold text-white">Total Bayar</span>
+                    <span className="font-black text-indigo-400 text-sm">
+                      {formatRupiah(
+                        Math.round(
+                          Math.round((selectedRecommendPackage?.price || 0) * (1 - discountPct / 100)) * 
+                          (1 - (appliedPromo ? appliedPromo.discount : 0) / 100)
+                        )
+                      )}
+                    </span>
+                  </div>
                 </div>
+              </div>
+
+              {/* Kolom Kode Promo */}
+              <div className="space-y-1.5">
+                <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">Kode Promo</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Masukkan kode promo (e.g. GOLDFUN)"
+                    value={promoCodeInput}
+                    onChange={(e) => setPromoCodeInput(e.target.value)}
+                    className="flex-1 h-10 bg-slate-900 border border-slate-850 rounded-xl px-3 text-xs font-bold text-white uppercase outline-none focus:border-indigo-500 transition-all placeholder:text-slate-600"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleApplyPromo(promoCodeInput)}
+                    className="px-4 h-10 bg-indigo-600 hover:bg-indigo-505 text-white rounded-xl text-xs font-black shadow-md transition-colors cursor-pointer border border-transparent"
+                  >
+                    Terapkan
+                  </button>
+                </div>
+                {promoError && (
+                  <p className="text-[10px] font-semibold text-rose-400 mt-1">{promoError}</p>
+                )}
+                {appliedPromo && (
+                  <p className="text-[10px] font-bold text-emerald-400 mt-1">
+                    ✓ Promo {appliedPromo.code} berhasil diterapkan! (Diskon {appliedPromo.discount}%)
+                  </p>
+                )}
               </div>
 
               <div className="space-y-1.5">

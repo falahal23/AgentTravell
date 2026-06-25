@@ -22,13 +22,9 @@ export default function MainLayout() {
   return (
     <div className="flex h-screen w-full bg-[#F8FAFC] overflow-hidden">
       {/* SIDEBAR */}
-
-      <aside className="w-64 hidden lg:block bg-white border-r border-slate-100">
-        <Sidebar />
-      </aside>
+      <Sidebar />
 
       {/* MAIN WRAPPER */}
-
       <div className="flex flex-col flex-1 min-w-0">
         {/* HEADER */}
 
